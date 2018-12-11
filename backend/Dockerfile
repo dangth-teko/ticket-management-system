@@ -9,6 +9,7 @@ WORKDIR /backend
 RUN apk update
 RUN apk upgrade
 RUN apk --no-cache add \
+    bash \
     postgresql-client \
     postgresql-dev \
     build-base \
@@ -16,8 +17,6 @@ RUN apk --no-cache add \
 RUN pip3 install --upgrade pip
 ADD requirements.txt /backend/
 RUN pip3 install -r requirements.txt
-COPY ./wait-for-it.sh /backend
-RUN chmod +x wait-for-it.sh
 
 # clean
 RUN apk del -r postgresql

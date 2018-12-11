@@ -18,10 +18,11 @@ services:
     restart: on-failure
     volumes:
       - ./backend:/backend
+      - ./backend/wait-for-postgres.sh:/backend/wait-for-postgres.sh
     ports:
       - "8000:8000"
     env_file: .env
-    command: sh -c "/backend/wait-for-it.sh db && python3 manage.py db upgrade && gunicorn -b 0.0.0.0:8000 app:app --reload"
+    command: ["./wait-for-postgres.sh", "db", "entrypoint-dev.sh"]
     networks:
       - ticket-service
     depends_on:
