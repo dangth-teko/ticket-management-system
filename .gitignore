@@ -6,3 +6,5 @@ frontend/node_modules
 /frontend/build/
 /.venv/
 /postgres/
+__pycache__/
+*.pyc
