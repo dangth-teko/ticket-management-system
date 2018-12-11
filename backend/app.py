@@ -1,11 +1,13 @@
 # app.py
-
-
 from flask import Flask
 from flask import request, render_template
 from flask_sqlalchemy import SQLAlchemy
-from config import BaseConfig
+from config import BaseConfig, LOGGING_FILE_CONFIG
+import logging.config
+import logging
+_logger = logging.getLogger(__name__)
 
+logging.config.fileConfig(LOGGING_FILE_CONFIG)
 
 app = Flask(__name__)
 app.config.from_object(BaseConfig)
