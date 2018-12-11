@@ -11,7 +11,7 @@ services:
     networks:
       - ticket-service
     volumes:
-      - ./postgres:/var/lib/postgresql/data
+      - ticket_db:/var/lib/postgresql/data
 
   backend:
     build: backend/
@@ -21,7 +21,7 @@ services:
     ports:
       - "8000:8000"
     env_file: .env
-    command: sh -c "python3 manage.py db migrate && python3 manage.py db upgrade && gunicorn -b 0.0.0.0:8000 app:app --reload"
+    command: sh -c "/backend/wait-for-it.sh db && python3 manage.py db upgrade && gunicorn -b 0.0.0.0:8000 app:app --reload"
     networks:
       - ticket-service
     depends_on:
@@ -58,3 +58,6 @@ services:
 networks:
   ticket-service:
     driver: bridge
+
+volumes:
+  ticket_db:
