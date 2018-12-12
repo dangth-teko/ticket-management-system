@@ -3,6 +3,9 @@ FROM python:3.6.7-alpine
 ENV PYTHONUNBUFFERED 1
 RUN mkdir /backend
 RUN mkdir /log
+
+EXPOSE 5000
+
 WORKDIR /backend
 
 # setup

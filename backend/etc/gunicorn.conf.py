@@ -13,7 +13,7 @@ _ROOT = os.path.abspath(os.path.join(
 VAR_DIR = os.path.join(_ROOT, 'var')
 ETC_DIR = os.path.join(_ROOT, 'etc')
 
-bind = '127.0.0.1:5000'
+bind = '0.0.0.0:5000'
 workers = multiprocessing.cpu_count() * 2 + 1
 
 timeout = 180  # 3 minutes
