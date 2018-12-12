@@ -1,8 +1,10 @@
-# models.py
-
-
+# coding=utf-8
+import logging
 import datetime
-from app import db
+
+from app_core.models import db
+
+_logger = logging.getLogger(__name__)
 
 
 class Post(db.Model):

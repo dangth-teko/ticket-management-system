@@ -1,17 +1,28 @@
 # config.py
 import os
-_HERE_ = os.path.dirname(__file__)
 
-class BaseConfig(object):
-    SECRET_KEY = os.environ['SECRET_KEY']
-    DEBUG = os.environ['DEBUG']
-    POSTGRES_DB = os.environ['POSTGRES_DB']
-    POSTGRES_USER = os.environ['POSTGRES_USER']
-    POSTGRES_PASSWORD = os.environ['POSTGRES_PASSWORD']
-    POSTGRES_HOST = os.environ['POSTGRES_HOST']
-    POSTGRES_PORT = os.environ['POSTGRES_PORT']
-    SQLALCHEMY_DATABASE_URI = 'postgresql://{0}:{1}@{2}:{3}/{4}'.format(
-        POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_HOST, POSTGRES_PORT, POSTGRES_DB
+ROOT_DIR = os.path.abspath(
+    os.path.join(
+        os.path.dirname(__file__)
     )
+)
 
-LOGGING_FILE_CONFIG = os.path.join(_HERE_, 'etc', 'logging.ini')
+SECRET_KEY = '\xb8,\xef\xc9w\xb0\xc3Xv+\xa6\x852\xa6\\\x00\xd0\xea\x81\x99\xca\xd6\xb56'
+
+LOGGING_FILE_CONFIG = os.path.join(ROOT_DIR, 'etc', 'logging.ini')
+STATIC_FOLDER = os.path.join(ROOT_DIR, 'static')
+
+# Environment to run config. This value will affect the configuration loading
+ENV_MODE = os.getenv('ENV_MODE', '').upper()
+
+SQLALCHEMY_TRACK_MODIFICATIONS = True
+SQLALCHEMY_COMMIT_ON_TEARDOWN = True
+
+POSTGRES_DB = os.getenv('POSTGRES_DB')
+POSTGRES_USER = os.getenv('POSTGRES_USER')
+POSTGRES_PASSWORD = os.getenv('POSTGRES_PASSWORD')
+POSTGRES_HOST = os.getenv('POSTGRES_HOST')
+POSTGRES_PORT = os.getenv('POSTGRES_PORT')
+SQLALCHEMY_DATABASE_URI = 'postgresql://{0}:{1}@{2}:{3}/{4}'.format(
+    POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_HOST, POSTGRES_PORT, POSTGRES_DB
+)

@@ -1,2 +1,1 @@
-python3 manage.py db upgrade
-gunicorn -w 3 -b 0.0.0.0:8000 app:app --reload
+gunicorn -c etc/gunicorn.conf.py app:app --reload
