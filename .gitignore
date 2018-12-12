@@ -8,3 +8,4 @@ frontend/node_modules
 /postgres/
 __pycache__/
 *.pyc
+!/backend/var/log/.gitkeep
