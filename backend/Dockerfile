@@ -11,6 +11,7 @@ WORKDIR /backend
 # setup
 RUN apk update
 RUN apk upgrade
+RUN apk add libffi-dev python-dev --no-cache
 RUN apk --no-cache add \
     bash \
     postgresql-client \

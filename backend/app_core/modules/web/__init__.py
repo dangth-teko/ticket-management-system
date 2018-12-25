@@ -4,6 +4,7 @@ import flask
 from flask import Blueprint, render_template, request
 
 from app_core.models import db, Post
+from app_core.modules.web.users import user
 
 _logger = logging.getLogger(__name__)
 
@@ -18,6 +19,7 @@ def init_app(app, **kwargs):
     :return:
     """
     app.register_blueprint(web)
+    app.register_blueprint(user)
 
 
 @web.route('/', methods=['GET', 'POST'])
