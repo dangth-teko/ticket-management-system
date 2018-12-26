@@ -1,0 +1,27 @@
+.Form {
+    max-width: 400px;
+    padding: 20px;
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
+}
+
+.Button {
+    margin: 5px;
+    width: 100%;
+}
+
+.Input {
+    margin: 5px;
+}
+
+.break-line {
+    flex-basis: 100%;
+    width: 0px;
+    height: 0px;
+    overflow: hidden;
+}
+
+.Alert {
+    width: 97%;
+}
