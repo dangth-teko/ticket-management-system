@@ -24,7 +24,6 @@ def init_app(app, **kwargs):
                  app.config['SQLALCHEMY_DATABASE_URI'])
     # db.create_all()
 
-
 from .base_model import BaseModel
 from .post import Post
 from .user import User

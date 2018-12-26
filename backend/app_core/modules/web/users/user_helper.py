@@ -1,18 +1,21 @@
-from itsdangerous import (TimedJSONWebSignatureSerializer
-                          as Serializer, BadSignature, SignatureExpired)
+import datetime
 
+from itsdangerous import (TimedJSONWebSignatureSerializer
+                          as Serializer)
+
+from app_core.models import UserToken, db
 from config import SECRET_KEY
 
 
 def validate_token(token):
-    s = Serializer(SECRET_KEY)
-    try:
-        data = s.loads(token)
-    except SignatureExpired:
-        return None  # valid token, but expired
-    except BadSignature:
-        return None  # invalid token
-    return data
+    token = UserToken.query.filter_by(token=token).first()
+    if token:
+        if token.expired_time > datetime.datetime.now():
+            return token.user
+        else:
+            db.session.delete(token)
+            db.session.flush()
+    return None
 
 
 def generate_token(user, expiration=1800):

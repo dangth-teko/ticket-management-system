@@ -4,6 +4,6 @@ from app_core.models import db
 
 class BaseModel(db.Model):
     __abstract__ = True
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     created_at = db.Column(db.TIMESTAMP, default=datetime.now())
     updated_at = db.Column(db.TIMESTAMP, default=datetime.now())
