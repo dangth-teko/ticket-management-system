@@ -16,8 +16,8 @@ class User(BaseModel):
     __tablename__ = 'user'
 
     # id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String, primary_key=True)
-    email = db.Column(db.String, primary_key=True)
+    username = db.Column(db.String, primary_key=True, unique=True)
+    email = db.Column(db.String, primary_key=True, unique=True)
     password = db.Column(db.String, nullable=False)
     is_admin = db.Column(db.Integer, nullable=False)
     is_active = db.Column(db.SmallInteger, nullable=False)
@@ -67,16 +67,18 @@ class User(BaseModel):
         db.session.flush()
 
     @classmethod
-    def insert_time(cls,username):
+    def insert_time(cls, username):
         history_wrong_pass = HistoryWrongPass.query.filter_by(username=username).first()
         if not history_wrong_pass:
-            history_wrong_pass = HistoryWrongPass(username=username)
-            user = User.query.filter(db.User.username == username)
+            history_wrong_pass = HistoryWrongPass(username=username, time=[])
+            user = User.query.filter_by(username=username).first()
+            print(user)
             history_wrong_pass.user = user
             db.session.add(history_wrong_pass)
-        db.session.flush()
         history_wrong_pass.time.append(datetime.datetime.now())
+        db.session.commit()
         length_history = len(history_wrong_pass.time)
+
         if length_history == 3:
             if ((history_wrong_pass.time[2] - history_wrong_pass.time[0]) <= 5 * 60):
                 return {'capcha': True,
@@ -87,7 +89,11 @@ class User(BaseModel):
                         'block': False}
         elif length_history == 6:
             history_wrong_pass.time.pop(0)
-        db.session.flush()
+        # print(length_history)
+        # db.session.flush()
+
+        # print(history_wrong_pass.time)
+        # print(history_wrong_pass.username)
         if len(history_wrong_pass.time) == 5:
             if ((history_wrong_pass.time[4] - history_wrong_pass.time[0]) <= 10 * 60):
                 history_wrong_pass.user.is_active = 0
@@ -96,4 +102,5 @@ class User(BaseModel):
             elif ((history_wrong_pass.time[4] - history_wrong_pass.time[2]) <= 5 * 60):
                 return {'capcha': True,
                         'block': False}
+        db.session.commit()
         return None
