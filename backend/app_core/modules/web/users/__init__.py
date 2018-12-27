@@ -7,8 +7,7 @@ import re
 from flask import Blueprint, render_template, request, jsonify
 
 # from app_core.models import db, Post
-from app_core.models import UserToken
-from app_core.models.user import User
+from app_core.models import UserToken, User
 from app_core.modules.web.users.user_helper import validate_token, generate_token
 from config import REGEX_USERNAME, REGEX_PASSWORD
 
