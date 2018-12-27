@@ -34,6 +34,6 @@ def login():
                     UserToken.insert_token(token, user.id)
                     return jsonify({'token': token})
                 else:
-                    return None
+                    return jsonify({'status': None})
             else:
                 return jsonify({'noti': "Sai dinh dang"})
