@@ -5,6 +5,7 @@ from app_core.models import db
 
 
 class SignupRequest(BaseModel):
+    __tablename__ = 'signup_request'
     username = db.Column(db.String, nullable=False)
     email = db.Column(db.String, nullable=False)
     password = db.Column(db.String, nullable=False)
