@@ -14,7 +14,6 @@ import { BASE_URL, apiConstants } from 'constants/api'
 const login = (username, password) => dispatch => {
     const request_url = BASE_URL + apiConstants.POST_LOGIN
     console.log('Submitting to...', request_url)
-
     Axios.post(request_url, { username, password })
         .then(response => {
             if (response.status === 200)

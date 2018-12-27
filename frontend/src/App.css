@@ -40,3 +40,7 @@
     transform: rotate(360deg);
   }
 }
+
+.box-shadow-bottom {
+  box-shadow: 0px 4px 8px grey;
+}

@@ -14,9 +14,6 @@ import { resetPassword } from 'actions/user'
 import { validateEmail, validateUsername } from 'utils/validateInput'
 import { showNotification } from 'utils/notificate'
 
-import "antd/dist/antd.css"
-import './ResetPassword.css'
-
 class ResetPassword extends React.Component {
     state = {
         username: '',
@@ -30,38 +27,36 @@ class ResetPassword extends React.Component {
         const errorUsername = validateUsername(this.state.username)
         const errorEmail = validateEmail(this.state.password)
         this.setState({ errorUsername, errorEmail })
-        if (errorUsername || errorEmail)
-            console.log('submit failed')
-        else {
+        if (!(errorUsername || errorEmail)) {
             console.log('submit success')
             this.props.dispatch(resetPassword(this.state.username, this.state.password))
+            this.props.history.push("/")
         }
     }
 
     componentDidUpdate() {
-        // reset notification on login page to null
         showNotification(this.props)
     }
 
     render() {
         return (
-            <Col><Card className="form-card">
+            <Col><Card className="box-shadow-bottom">
                 <Row type="flex" justify="center"><Icon type="lock" style={{ fontSize: '50px' }} /></Row>
                 <Row type="flex" justify="center"><h6>Quên mật khẩu</h6></Row>
                 <Form className="form" onSubmit={(e) => this.handleSubmit(e)}>
                     <Input
-                        className="input" prefix={<Icon type="user" />}
+                        className="my-2" prefix={<Icon type="user" />}
                         onChange={(e) => this.setState({ username: e.target.value })}
                         placeholder="username" />
                     {this.state.errorUsername && <font color="red">{this.state.errorUsername}</font>}
 
                     <Input
-                        className="input" prefix={<Icon type="mail" />}
+                        className="my-2" prefix={<Icon type="mail" />}
                         onChange={(e) => this.setState({ password: e.target.value })}
                         placeholder="email" />
                     {this.state.errorEmail && <font color="red">{this.state.errorEmail}</font>}
 
-                    <Button type="primary" htmlType="submit" className="button">Reset password</Button>
+                    <Button type="primary" htmlType="submit" className="my-2 w-100">Reset password</Button>
                 </Form>
             </Card></Col>
         )
