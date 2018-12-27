@@ -6,10 +6,13 @@ import {
     Input,
     Icon,
     Button,
-    Alert
+    Col,
+    Row,
+    Card
 } from 'antd'
-import { submitLogin } from '../../actions/user'
+import { login } from 'actions/user'
 import { validatePassword, validateUsername } from 'utils/validateInput'
+import { showNotification } from 'utils/notificate'
 
 import "antd/dist/antd.css"
 import './Login.css'
@@ -31,48 +34,50 @@ class Login extends React.Component {
             console.log('submit failed')
         else {
             console.log('submit success')
-            this.props.dispatch(submitLogin(this.state.username, this.state.password))
+            this.props.dispatch(login(this.state.username, this.state.password))
         }
     }
 
+    componentDidUpdate() {
+        // reset notification on login page to null
+        showNotification(this.props)
+    }
+
+
     render() {
         return (
-            <div className="container">
-                <Form className="Form" onSubmit={(e) => this.handleSubmit(e)}>
+            <Col><Card className="form-card">
+                <Row type="flex" justify="center"><Icon type="user" style={{ fontSize: '50px' }} /></Row>
+                <Row type="flex" justify="center"><h6>Đăng nhập</h6></Row>
 
-                    <Icon type="user" style={{ fontSize: '50px' }} />
-
+                <Form className="form" onSubmit={(e) => this.handleSubmit(e)}>
                     <Input
-                        type="text" className="Input" prefix={<Icon type="user" />}
+                        className="input" prefix={<Icon type="user" />}
                         onChange={(e) => this.setState({ username: e.target.value })}
                         placeholder="username" />
                     {this.state.errorUsername && <font color="red">{this.state.errorUsername}</font>}
 
                     <Input
-                        type="password" className="Input" prefix={<Icon type="lock" />}
+                        type="password" className="input" prefix={<Icon type="lock" />}
                         onChange={(e) => this.setState({ password: e.target.value })}
                         placeholder="password" />
                     {this.state.errorPassword && <font color="red">{this.state.errorPassword}</font>}
 
-                    {this.props.error && <Alert className="Alert" message={this.props.error} type="error" showIcon />}
+                    <Button type="primary" htmlType="submit" className="button">Đăng nhập</Button>
 
-                    <Button type="primary" htmlType="submit" className="Button">Đăng nhập</Button>
-
-                    <Link to="/ForgetPassword">Quên mật khẩu</Link>
+                    <Link to="/reset-password">Quên mật khẩu</Link>
                     <div className="break-line" />
 
                     <strong>{'Chưa có tài khoản?'}</strong>
-                    <Link to="/signup">Đăng ký</Link>
-
+                    <Link to="/sign-up">Đăng ký</Link>
                 </Form>
-            </div>
+            </Card></Col>
         )
     }
 }
 
 const mapStateToProps = state => ({
-    isLogined: state.user.isLogined,
-    error: state.user.error
+    notification: state.user.notification
 })
 
 export default connect(mapStateToProps, null)(Login)
