@@ -22,16 +22,24 @@ class ResetPassword extends React.Component {
         errorEmail: null
     }
 
-    handleSubmit(e) {
+    handleSubmit = e => {
         e.preventDefault()
         const errorUsername = validateUsername(this.state.username)
-        const errorEmail = validateEmail(this.state.password)
+        const errorEmail = validateEmail(this.state.email)
         this.setState({ errorUsername, errorEmail })
         if (!(errorUsername || errorEmail)) {
             console.log('submit success')
-            this.props.dispatch(resetPassword(this.state.username, this.state.password))
+            this.props.dispatch(resetPassword(this.state.username, this.state.email))
             this.props.history.push("/")
         }
+    }
+
+    handleFormChange = e => {
+        const name = e.target.name
+        const value = e.target.value
+        this.setState({
+            [name]: value
+        })
     }
 
     componentDidUpdate() {
@@ -44,16 +52,18 @@ class ResetPassword extends React.Component {
                 <Card className="box-shadow-bottom">
                     <Row type="flex" justify="center"><Icon type="lock" style={{ fontSize: '50px' }} /></Row>
                     <Row type="flex" justify="center"><h6>Quên mật khẩu</h6></Row>
-                    <Form className="form" onSubmit={(e) => this.handleSubmit(e)}>
+                    <Form className="form" onSubmit={this.handleSubmit}>
                         <Input
                             className="my-2" prefix={<Icon type="user" />}
-                            onChange={(e) => this.setState({ username: e.target.value })}
+                            name="username"
+                            onChange={this.handleFormChange}
                             placeholder="username" />
                         {this.state.errorUsername && <font color="red">{this.state.errorUsername}</font>}
 
                         <Input
                             className="my-2" prefix={<Icon type="mail" />}
-                            onChange={(e) => this.setState({ password: e.target.value })}
+                            name="email"
+                            onChange={this.handleFormChange}
                             placeholder="email" />
                         {this.state.errorEmail && <font color="red">{this.state.errorEmail}</font>}
 

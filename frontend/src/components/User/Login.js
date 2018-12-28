@@ -22,13 +22,21 @@ class Login extends React.Component {
         errorPassword: null
     }
 
-    handleSubmit(e) {
+    handleSubmit = e => {
         e.preventDefault()
         const errorUsername = validateUsername(this.state.username)
         const errorPassword = validatePassword(this.state.password)
         this.setState({ errorUsername, errorPassword })
         if (!(errorUsername || errorPassword))
             this.props.dispatch(login(this.state.username, this.state.password))
+    }
+
+    handleFormChange = e => {
+        const name = e.target.name
+        const value = e.target.value
+        this.setState({
+            [name]: value
+        })
     }
 
     componentDidUpdate() {
@@ -46,16 +54,18 @@ class Login extends React.Component {
                     <Row type="flex" justify="center"><Icon type="user" style={{ fontSize: '50px' }} /></Row>
                     <Row type="flex" justify="center"><h6>Đăng nhập</h6></Row>
 
-                    <Form className="form" onSubmit={this.handleSubmit.bind(this)}>
+                    <Form className="form" onSubmit={this.handleSubmit}>
                         <Input
                             className="my-2" prefix={<Icon type="user" />}
-                            onChange={(e) => this.setState({ username: e.target.value })}
+                            name="username"
+                            onChange={this.handleFormChange}
                             placeholder="username" />
                         {this.state.errorUsername && <font color="red">{this.state.errorUsername}</font>}
 
                         <Input
                             type="password" className="my-2" prefix={<Icon type="lock" />}
-                            onChange={(e) => this.setState({ password: e.target.value })}
+                            name="password"
+                            onChange={this.handleFormChange}
                             placeholder="password" />
                         {this.state.errorPassword && <font color="red">{this.state.errorPassword}</font>}
 

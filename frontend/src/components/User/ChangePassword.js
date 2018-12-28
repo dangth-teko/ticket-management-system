@@ -22,7 +22,7 @@ class ChangePassword extends React.Component {
         errorPassword: null
     }
 
-    handleSubmit(e) {
+    handleSubmit = e => {
         e.preventDefault()
         const errorPassword = validatePassword(this.state.newPassword, this.state.newPasswordConfirm)
         this.setState({ errorPassword })
@@ -32,6 +32,14 @@ class ChangePassword extends React.Component {
             console.log('submit success')
             this.props.dispatch(changePassword(this.state.oldPassword, this.state.newPassword, this.props.newPasswordConfirm))
         }
+    }
+
+    handleFormChange = e => {
+        const name = e.target.name
+        const value = e.target.value
+        this.setState({
+            [name]: value
+        })
     }
 
     componentDidUpdate() {
@@ -44,20 +52,23 @@ class ChangePassword extends React.Component {
                 <Card className="box-shadow-bottom">
                     <Row type="flex" justify="center"><Icon type="lock" style={{ fontSize: '50px' }} /></Row>
                     <Row type="flex" justify="center"><h6>Quên mật khẩu</h6></Row>
-                    <Form className="form" onSubmit={(e) => this.handleSubmit(e)}>
+                    <Form className="form" onSubmit={this.handleSubmit}>
                         <Input
                             type="password" className="my-2" prefix={<Icon type="lock" />}
-                            onChange={(e) => this.setState({ oldPassword: e.target.value })}
+                            name="oldPassword"
+                            onChange={this.handleFormChange}
                             placeholder="Current Password" />
 
                         <Input
                             type="password" className="my-2" prefix={<Icon type="lock" />}
-                            onChange={(e) => this.setState({ newPassword: e.target.value })}
+                            name="newPassword"
+                            onChange={this.handleFormChange}
                             placeholder="New Password" />
 
                         <Input
                             type="password" className="my-2" prefix={<Icon type="lock" />}
-                            onChange={(e) => this.setState({ newPasswordConfirm: e.target.value })}
+                            name="newPasswordConfirm"
+                            onChange={this.handleFormChange}
                             placeholder="Confirm New Password" />
 
                         {this.state.errorPassword && <font color="red">{this.state.errorPassword}</font>}

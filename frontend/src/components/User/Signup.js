@@ -11,7 +11,7 @@ class Signup extends React.Component {
     state = {
         username: '',
         password: '',
-        confirm_password: '',
+        confirmPassword: '',
         email: '',
         errorUsername: null,
         errorPassword: null,
@@ -22,16 +22,24 @@ class Signup extends React.Component {
         showNotification(this.props)
     }
 
-    handleSubmit(e) {
+    handleSubmit = e => {
         e.preventDefault()
         const errorUsername = validateUsername(this.state.username)
-        const errorPassword = validatePassword(this.state.password, this.state.confirm_password)
+        const errorPassword = validatePassword(this.state.password, this.state.confirmPassword)
         const errorEmail = validateEmail(this.state.email)
         this.setState({ errorUsername, errorPassword, errorEmail })
         if (!(errorEmail || errorPassword || errorUsername)) {
             this.props.dispatch(signup(this.state.username, this.state.password, this.state.email))
             this.props.history.push("/")
         }
+    }
+
+    handleFormChange = e => {
+        const name = e.target.name
+        const value = e.target.value
+        this.setState({
+            [name]: value
+        })
     }
 
     render() {
@@ -41,12 +49,13 @@ class Signup extends React.Component {
                     <Row type="flex" justify="center"><Icon type="user-add" style={{ fontSize: '50px' }} /></Row>
                     <Row type="flex" justify="center"><h6>Đăng ký tài khoản</h6></Row>
 
-                    <Form className="form" onSubmit={e => this.handleSubmit(e)}>
+                    <Form className="form" onSubmit={this.handleSubmit}>
                         <Input
                             prefix={<Icon type="user" />}
                             className="my-2"
                             placeholder="username"
-                            onChange={e => this.setState({ username: e.target.value })} />
+                            name="username"
+                            onChange={this.handleFormChange} />
                         {this.state.errorUsername && <font color="red">{this.state.errorUsername}</font>}
 
                         <Input
@@ -54,21 +63,24 @@ class Signup extends React.Component {
                             type="password"
                             className="my-2"
                             placeholder="password"
-                            onChange={e => this.setState({ password: e.target.value })} />
+                            name="password"
+                            onChange={this.handleFormChange} />
 
                         <Input
                             prefix={<Icon type="lock" />}
                             type="password"
                             className="my-2"
-                            placeholder="confirm password"
-                            onChange={e => this.setState({ confirm_password: e.target.value })} />
+                            placeholder="confirmPassword"
+                            name="confirmPassword"
+                            onChange={this.handleFormChange} />
                         {this.state.errorPassword && <font color="red">{this.state.errorPassword}</font>}
 
                         <Input
                             prefix={<Icon type="mail" />}
                             className="my-2"
                             placeholder="email"
-                            onChange={e => this.setState({ email: e.target.value })} />
+                            name="email"
+                            onChange={this.handleFormChange} />
                         {this.state.errorEmail && <font color="red">{this.state.errorEmail}</font>}
 
                         <Button type="primary" htmlType="submit" className="my-2 w-100">Đăng ký</Button>
