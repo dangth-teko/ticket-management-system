@@ -58,7 +58,7 @@ class ChangePassword extends React.Component {
                         <Input
                             type="password" className="my-2" prefix={<Icon type="lock" />}
                             onChange={(e) => this.setState({ newPasswordConfirm: e.target.value })}
-                            placeholder="Confimr New Password" />
+                            placeholder="Confirm New Password" />
 
                         {this.state.errorPassword && <font color="red">{this.state.errorPassword}</font>}
 

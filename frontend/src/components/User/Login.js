@@ -46,7 +46,7 @@ class Login extends React.Component {
                     <Row type="flex" justify="center"><Icon type="user" style={{ fontSize: '50px' }} /></Row>
                     <Row type="flex" justify="center"><h6>Đăng nhập</h6></Row>
 
-                    <Form className="form" onSubmit={(e) => this.handleSubmit(e)}>
+                    <Form className="form" onSubmit={this.handleSubmit.bind(this)}>
                         <Input
                             className="my-2" prefix={<Icon type="user" />}
                             onChange={(e) => this.setState({ username: e.target.value })}

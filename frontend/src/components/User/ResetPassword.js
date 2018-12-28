@@ -40,25 +40,27 @@ class ResetPassword extends React.Component {
 
     render() {
         return (
-            <Col><Card className="box-shadow-bottom">
-                <Row type="flex" justify="center"><Icon type="lock" style={{ fontSize: '50px' }} /></Row>
-                <Row type="flex" justify="center"><h6>Quên mật khẩu</h6></Row>
-                <Form className="form" onSubmit={(e) => this.handleSubmit(e)}>
-                    <Input
-                        className="my-2" prefix={<Icon type="user" />}
-                        onChange={(e) => this.setState({ username: e.target.value })}
-                        placeholder="username" />
-                    {this.state.errorUsername && <font color="red">{this.state.errorUsername}</font>}
+            <Col>
+                <Card className="box-shadow-bottom">
+                    <Row type="flex" justify="center"><Icon type="lock" style={{ fontSize: '50px' }} /></Row>
+                    <Row type="flex" justify="center"><h6>Quên mật khẩu</h6></Row>
+                    <Form className="form" onSubmit={(e) => this.handleSubmit(e)}>
+                        <Input
+                            className="my-2" prefix={<Icon type="user" />}
+                            onChange={(e) => this.setState({ username: e.target.value })}
+                            placeholder="username" />
+                        {this.state.errorUsername && <font color="red">{this.state.errorUsername}</font>}
 
-                    <Input
-                        className="my-2" prefix={<Icon type="mail" />}
-                        onChange={(e) => this.setState({ password: e.target.value })}
-                        placeholder="email" />
-                    {this.state.errorEmail && <font color="red">{this.state.errorEmail}</font>}
+                        <Input
+                            className="my-2" prefix={<Icon type="mail" />}
+                            onChange={(e) => this.setState({ password: e.target.value })}
+                            placeholder="email" />
+                        {this.state.errorEmail && <font color="red">{this.state.errorEmail}</font>}
 
-                    <Button type="primary" htmlType="submit" className="my-2 w-100">Reset password</Button>
-                </Form>
-            </Card></Col>
+                        <Button type="primary" htmlType="submit" className="my-2 w-100">Reset password</Button>
+                    </Form>
+                </Card>
+            </Col>
         )
     }
 }

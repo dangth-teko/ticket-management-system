@@ -36,43 +36,45 @@ class Signup extends React.Component {
 
     render() {
         return (
-            <Col><Card className="box-shadow-bottom">
-                <Row type="flex" justify="center"><Icon type="user-add" style={{ fontSize: '50px' }} /></Row>
-                <Row type="flex" justify="center"><h6>Đăng ký tài khoản</h6></Row>
+            <Col>
+                <Card className="box-shadow-bottom">
+                    <Row type="flex" justify="center"><Icon type="user-add" style={{ fontSize: '50px' }} /></Row>
+                    <Row type="flex" justify="center"><h6>Đăng ký tài khoản</h6></Row>
 
-                <Form className="form" onSubmit={e => this.handleSubmit(e)}>
-                    <Input
-                        prefix={<Icon type="user" />}
-                        className="my-2"
-                        placeholder="username"
-                        onChange={e => this.setState({ username: e.target.value })} />
-                    {this.state.errorUsername && <font color="red">{this.state.errorUsername}</font>}
+                    <Form className="form" onSubmit={e => this.handleSubmit(e)}>
+                        <Input
+                            prefix={<Icon type="user" />}
+                            className="my-2"
+                            placeholder="username"
+                            onChange={e => this.setState({ username: e.target.value })} />
+                        {this.state.errorUsername && <font color="red">{this.state.errorUsername}</font>}
 
-                    <Input
-                        prefix={<Icon type="lock" />}
-                        type="password"
-                        className="my-2"
-                        placeholder="password"
-                        onChange={e => this.setState({ password: e.target.value })} />
+                        <Input
+                            prefix={<Icon type="lock" />}
+                            type="password"
+                            className="my-2"
+                            placeholder="password"
+                            onChange={e => this.setState({ password: e.target.value })} />
 
-                    <Input
-                        prefix={<Icon type="lock" />}
-                        type="password"
-                        className="my-2"
-                        placeholder="confirm password"
-                        onChange={e => this.setState({ confirm_password: e.target.value })} />
-                    {this.state.errorPassword && <font color="red">{this.state.errorPassword}</font>}
+                        <Input
+                            prefix={<Icon type="lock" />}
+                            type="password"
+                            className="my-2"
+                            placeholder="confirm password"
+                            onChange={e => this.setState({ confirm_password: e.target.value })} />
+                        {this.state.errorPassword && <font color="red">{this.state.errorPassword}</font>}
 
-                    <Input
-                        prefix={<Icon type="mail" />}
-                        className="my-2"
-                        placeholder="email"
-                        onChange={e => this.setState({ email: e.target.value })} />
-                    {this.state.errorEmail && <font color="red">{this.state.errorEmail}</font>}
+                        <Input
+                            prefix={<Icon type="mail" />}
+                            className="my-2"
+                            placeholder="email"
+                            onChange={e => this.setState({ email: e.target.value })} />
+                        {this.state.errorEmail && <font color="red">{this.state.errorEmail}</font>}
 
-                    <Button type="primary" htmlType="submit" className="my-2 w-100">Đăng ký</Button>
-                </Form>
-            </Card></Col>
+                        <Button type="primary" htmlType="submit" className="my-2 w-100">Đăng ký</Button>
+                    </Form>
+                </Card>
+            </Col>
         )
     }
 }
