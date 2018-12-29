@@ -1,0 +1,11 @@
+# Created by .ignore support plugin (hsz.mobi)
+/.idea
+frontend/yarn.lock
+frontend/node_modules
+/.env
+/frontend/build/
+/.venv/
+/postgres/
+__pycache__/
+*.pyc
+!/backend/var/log/.gitkeep

@@ -1,0 +1,7 @@
+version: '3.7'
+
+services:
+  backend:
+    command: ["./wait-for-postgres.sh", "db", "entrypoint.sh"]
+  frontend:
+    command: yarn deploy
