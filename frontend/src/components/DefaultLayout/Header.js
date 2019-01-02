@@ -1,13 +1,8 @@
 import React from 'react'
 import { Layout, Button } from "antd"
-import { TOKEN } from 'constants/utils'
+import logout from 'utils/logout'
 
 const { Header } = Layout
-
-const Logout = () => {
-    localStorage.removeItem(TOKEN)
-    window.location.reload()
-}
 
 const HeaderComponent = props => {
     return (
@@ -21,7 +16,7 @@ const HeaderComponent = props => {
             {props.isAuthenticated &&
                 <Button
                     className="text-light my-2 ml-auto p-2 bd-highlight bg-transparent"
-                    onClick={Logout}>
+                    onClick={logout}>
                     Log Out
                 </Button>}
         </Header>

@@ -11,6 +11,7 @@ import {
     NOTI_TYPE_FAIL,
     CLEAR_NOTI
 } from 'constants/actions'
+import logout from 'utils/logout'
 
 const initialState = {
     isAuthenticated: false,
@@ -26,6 +27,7 @@ const UserReducer = (state = initialState, action) => {
                 isAuthenticated: true, token: action.data }
 
         case LOGIN_FAIL:
+            logout()
             return { ...state,
                 notification: { type: NOTI_TYPE_FAIL, message: action.data },
                 isAuthenticated: false, token: null, error: action.data }
