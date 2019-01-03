@@ -32,3 +32,7 @@ SQLALCHEMY_DATABASE_URI = 'postgresql://{0}:{1}@{2}:{3}/{4}'.format(
 REGEX_USERNAME = r"""^(?=(?:.*[A-Za-z]){1,})(?=(?:.*\d){1,})([A-Za-z0-9!@#$%^&*()\-_=+{};:,<.>]{6,})$"""
 REGEX_EMAIL = r"""[A-Z0-9._%+-]+@[A-Z0-9-]+.+.[A-Z]{2,4}"""
 REGEX_PASSWORD = r"""^(?=(?:.*[A-Z]){1,})(?=(?:.*[a-z]){1,})(?=(?:.*\d){1,})([A-Za-z0-9!@#$%^&*()\-_=+{};:,<.>]{8,})$"""
+
+FORMAT_RESPONSE = {
+    "error": {"code": 0, "message": ""},
+    "data": {}}

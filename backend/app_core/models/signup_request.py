@@ -11,3 +11,4 @@ class SignupRequest(BaseModel):
     password = db.Column(db.String, nullable=False)
     is_admin = db.Column(db.Boolean)
     expired_time = db.Column(db.TIMESTAMP, default=datetime.datetime.now() + datetime.timedelta(minutes=30))
+    access_token_config = db.Column(db.String, nullable=False)
