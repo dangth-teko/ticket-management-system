@@ -1,6 +1,6 @@
 import React from 'react'
 import { Layout, Button } from "antd"
-import logout from 'utils/logout'
+import { logout } from 'utils/auth'
 
 const { Header } = Layout
 

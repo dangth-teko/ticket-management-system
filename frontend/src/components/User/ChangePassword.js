@@ -5,7 +5,6 @@ import {
     Input,
     Icon,
     Button,
-    Col,
     Row,
     Card
 } from 'antd'
@@ -48,35 +47,33 @@ class ChangePassword extends React.Component {
 
     render() {
         return (
-            <Col>
-                <Card className="box-shadow-bottom">
-                    <Row type="flex" justify="center"><Icon type="lock" style={{ fontSize: '50px' }} /></Row>
-                    <Row type="flex" justify="center"><h6>Quên mật khẩu</h6></Row>
-                    <Form className="form" onSubmit={this.handleSubmit}>
-                        <Input
-                            type="password" className="my-2" prefix={<Icon type="lock" />}
-                            name="oldPassword"
-                            onChange={this.handleFormChange}
-                            placeholder="Current Password" />
+            <Card className="box-shadow-bottom">
+                <Row type="flex" justify="center"><Icon type="lock" style={{ fontSize: '50px' }} /></Row>
+                <Row type="flex" justify="center"><h6>Quên mật khẩu</h6></Row>
+                <Form className="form" onSubmit={this.handleSubmit}>
+                    <Input
+                        type="password" className="my-2" prefix={<Icon type="lock" />}
+                        name="oldPassword"
+                        onChange={this.handleFormChange}
+                        placeholder="Current Password" />
 
-                        <Input
-                            type="password" className="my-2" prefix={<Icon type="lock" />}
-                            name="newPassword"
-                            onChange={this.handleFormChange}
-                            placeholder="New Password" />
+                    <Input
+                        type="password" className="my-2" prefix={<Icon type="lock" />}
+                        name="newPassword"
+                        onChange={this.handleFormChange}
+                        placeholder="New Password" />
 
-                        <Input
-                            type="password" className="my-2" prefix={<Icon type="lock" />}
-                            name="newPasswordConfirm"
-                            onChange={this.handleFormChange}
-                            placeholder="Confirm New Password" />
+                    <Input
+                        type="password" className="my-2" prefix={<Icon type="lock" />}
+                        name="newPasswordConfirm"
+                        onChange={this.handleFormChange}
+                        placeholder="Confirm New Password" />
 
-                        {this.state.errorPassword && <font color="red">{this.state.errorPassword}</font>}
+                    {this.state.errorPassword && <font color="red">{this.state.errorPassword}</font>}
 
-                        <Button type="primary" htmlType="submit" className="my-2 w-100">Change password</Button>
-                    </Form>
-                </Card>
-            </Col>
+                    <Button type="primary" htmlType="submit" className="my-2 w-100">Change password</Button>
+                </Form>
+            </Card>
         )
     }
 }

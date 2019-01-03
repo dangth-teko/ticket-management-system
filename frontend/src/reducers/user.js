@@ -11,7 +11,7 @@ import {
     NOTI_TYPE_FAIL,
     CLEAR_NOTI
 } from 'constants/actions'
-import logout from 'utils/logout'
+import { signin } from 'utils/auth'
 
 const initialState = {
     isAuthenticated: false,
@@ -22,43 +22,61 @@ const initialState = {
 const UserReducer = (state = initialState, action) => {
     switch (action.type) {
         case LOGIN_SUCCESS:
-            return { ...state,
+            signin(action.data)
+            return {
+                ...state,
                 notification: { type: NOTI_TYPE_SUCCESS, message: 'Đăng nhập thành công' },
-                isAuthenticated: true, token: action.data }
+                isAuthenticated: true, token: action.data
+            }
 
         case LOGIN_FAIL:
-            logout()
-            return { ...state,
+            return {
+                ...state,
                 notification: { type: NOTI_TYPE_FAIL, message: action.data },
-                isAuthenticated: false, token: null, error: action.data }
+                isAuthenticated: false, token: null, error: action.data
+            }
 
         case SIGNUP_SUCCESS:
-            return { ...state,
-                notification: { type: NOTI_TYPE_SUCCESS, message: 'Đăng ký tài khoản thành công, truy cập đường link đã được gửi tới email trong vòng 30 phút để kích hoạt tài khoản' } }
+            return {
+                ...state,
+                notification: { type: NOTI_TYPE_SUCCESS, message: 'Đăng ký tài khoản thành công, truy cập đường link đã được gửi tới email trong vòng 30 phút để kích hoạt tài khoản' }
+            }
 
         case SIGNUP_FAIL:
-            return { ...state,
-                notification: { type: NOTI_TYPE_FAIL, message: action.data } }
+            return {
+                ...state,
+                notification: { type: NOTI_TYPE_FAIL, message: action.data }
+            }
 
         case CHANGE_PASSWORD_SUCCESS:
-            return { ...state,
-                notification: { type: NOTI_TYPE_SUCCESS, message: 'Đổi mật khẩu thành công!' } }
+            return {
+                ...state,
+                notification: { type: NOTI_TYPE_SUCCESS, message: 'Đổi mật khẩu thành công!' }
+            }
 
         case CHANGE_PASSWORD_FAIL:
-            return { ...state,
-                notification: { type: NOTI_TYPE_FAIL, message: action.data } }
+            return {
+                ...state,
+                notification: { type: NOTI_TYPE_FAIL, message: action.data }
+            }
 
         case RESET_PASSWORD_SUCCESS:
-            return { ...state,
-                notification: { type: NOTI_TYPE_SUCCESS, message: 'Mật khẩu mới đã được gửi tới email của bạn!' } }
+            return {
+                ...state,
+                notification: { type: NOTI_TYPE_SUCCESS, message: 'Mật khẩu mới đã được gửi tới email của bạn!' }
+            }
 
         case RESET_PASSWORD_FAIL:
-            return { ...state,
-                notification: { type: NOTI_TYPE_FAIL, message: action.data } }
+            return {
+                ...state,
+                notification: { type: NOTI_TYPE_FAIL, message: action.data }
+            }
 
         case CLEAR_NOTI:
-            return { ...state,
-                notification: null }
+            return {
+                ...state,
+                notification: null
+            }
 
         default:
             return state

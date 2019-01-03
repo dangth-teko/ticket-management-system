@@ -6,7 +6,6 @@ import {
     Input,
     Icon,
     Button,
-    Col,
     Row,
     Card
 } from 'antd'
@@ -40,45 +39,39 @@ class Login extends React.Component {
     }
 
     componentDidUpdate() {
-        if (this.props.token) {
-            localStorage.setItem("teko-token", this.props.token)
-            window.location.reload()
-        }
         showNotification(this.props)
     }
 
     render() {
         return (
-            <Col>
-                <Card className="box-shadow-bottom">
-                    <Row type="flex" justify="center"><Icon type="user" style={{ fontSize: '50px' }} /></Row>
-                    <Row type="flex" justify="center"><h6>Đăng nhập</h6></Row>
+            <Card className="box-shadow-bottom">
+                <Row type="flex" justify="center"><Icon type="user" style={{ fontSize: '50px' }} /></Row>
+                <Row type="flex" justify="center"><h6>Đăng nhập</h6></Row>
 
-                    <Form className="form" onSubmit={this.handleSubmit}>
-                        <Input
-                            className="my-2" prefix={<Icon type="user" />}
-                            name="username"
-                            onChange={this.handleFormChange}
-                            placeholder="username" />
-                        {this.state.errorUsername && <font color="red">{this.state.errorUsername}</font>}
+                <Form className="form" onSubmit={this.handleSubmit}>
+                    <Input
+                        className="my-2" prefix={<Icon type="user" />}
+                        name="username"
+                        onChange={this.handleFormChange}
+                        placeholder="username" />
+                    {this.state.errorUsername && <font color="red">{this.state.errorUsername}</font>}
 
-                        <Input
-                            type="password" className="my-2" prefix={<Icon type="lock" />}
-                            name="password"
-                            onChange={this.handleFormChange}
-                            placeholder="password" />
-                        {this.state.errorPassword && <font color="red">{this.state.errorPassword}</font>}
+                    <Input
+                        type="password" className="my-2" prefix={<Icon type="lock" />}
+                        name="password"
+                        onChange={this.handleFormChange}
+                        placeholder="password" />
+                    {this.state.errorPassword && <font color="red">{this.state.errorPassword}</font>}
 
-                        <Button type="primary" htmlType="submit" className="w-100 my-2">Đăng nhập</Button>
+                    <Button type="primary" htmlType="submit" className="w-100 my-2">Đăng nhập</Button>
 
-                        <Link to="/reset-password">Quên mật khẩu</Link>
-                        <div className="break-line" />
+                    <Link to="/reset-password">Quên mật khẩu</Link>
+                    <div className="break-line" />
 
-                        <strong>{'Chưa có tài khoản?'}</strong>
-                        <Link to="/signup">Đăng ký</Link>
-                    </Form>
-                </Card>
-            </Col>
+                    <strong>{'Chưa có tài khoản?'}</strong>
+                    <Link to="/signup">Đăng ký</Link>
+                </Form>
+            </Card>
         )
     }
 }

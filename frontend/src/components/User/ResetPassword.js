@@ -5,7 +5,6 @@ import {
     Input,
     Icon,
     Button,
-    Col,
     Row,
     Card
 } from 'antd'
@@ -48,29 +47,27 @@ class ResetPassword extends React.Component {
 
     render() {
         return (
-            <Col>
-                <Card className="box-shadow-bottom">
-                    <Row type="flex" justify="center"><Icon type="lock" style={{ fontSize: '50px' }} /></Row>
-                    <Row type="flex" justify="center"><h6>Quên mật khẩu</h6></Row>
-                    <Form className="form" onSubmit={this.handleSubmit}>
-                        <Input
-                            className="my-2" prefix={<Icon type="user" />}
-                            name="username"
-                            onChange={this.handleFormChange}
-                            placeholder="username" />
-                        {this.state.errorUsername && <font color="red">{this.state.errorUsername}</font>}
+            <Card className="box-shadow-bottom">
+                <Row type="flex" justify="center"><Icon type="lock" style={{ fontSize: '50px' }} /></Row>
+                <Row type="flex" justify="center"><h6>Quên mật khẩu</h6></Row>
+                <Form className="form" onSubmit={this.handleSubmit}>
+                    <Input
+                        className="my-2" prefix={<Icon type="user" />}
+                        name="username"
+                        onChange={this.handleFormChange}
+                        placeholder="username" />
+                    {this.state.errorUsername && <font color="red">{this.state.errorUsername}</font>}
 
-                        <Input
-                            className="my-2" prefix={<Icon type="mail" />}
-                            name="email"
-                            onChange={this.handleFormChange}
-                            placeholder="email" />
-                        {this.state.errorEmail && <font color="red">{this.state.errorEmail}</font>}
+                    <Input
+                        className="my-2" prefix={<Icon type="mail" />}
+                        name="email"
+                        onChange={this.handleFormChange}
+                        placeholder="email" />
+                    {this.state.errorEmail && <font color="red">{this.state.errorEmail}</font>}
 
-                        <Button type="primary" htmlType="submit" className="my-2 w-100">Reset password</Button>
-                    </Form>
-                </Card>
-            </Col>
+                    <Button type="primary" htmlType="submit" className="my-2 w-100">Reset password</Button>
+                </Form>
+            </Card>
         )
     }
 }
