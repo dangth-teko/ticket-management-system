@@ -27,14 +27,23 @@ def register():
             matches_username = re.match(REGEX_USERNAME, data['username'], re.MULTILINE | re.VERBOSE)
             matches_password = re.match(REGEX_PASSWORD, data['password'], re.MULTILINE | re.VERBOSE)
             matches_verify_password = re.match(REGEX_PASSWORD, data['verify_password'], re.MULTILINE | re.VERBOSE)
+            print(matches_username)
+            print(matches_password)
+            print(matches_verify_password)
             if matches_password != None and matches_verify_password != None and matches_username != None:
                 if data['password'] != data['verify_password']:
-                    return jsonify({'error': "Mat khau khong khop, moi nhap lai"})
+                    return jsonify({'error': {
+                            'code': 1,
+                            'message':'Mat khau khong khop'
+                        }})
                 else:
                     user = User.get_user_by_username(data['username'])
                     print(user)
                     if user != None:
-                        return jsonify({'error': "User da ton tai, xin moi tao tai khoan khac"})
+                        return jsonify({'error': {
+                            'code': 1,
+                            'message':'User da ton tai, xin moi tao tai khoan khac'
+                        }})
                     else:
                         passw = data['password'].encode('utf-8')
                         password = User.hashed_password(passw)
@@ -49,13 +58,39 @@ def register():
                         send_email(user_request.email, subject, html)
                         db.session.add(user_request)
                         db.session.commit()
-                        return jsonify({'token': token})
-            return jsonify({'error': 'Sai dinh dang username hoac password'})
+                        return jsonify({'error': {
+                            'code': 0,
+                            'message':''
+                        },
+                            'data': token})
+            elif matches_password == None:
+                return  jsonify({'error': {
+                            'code': 1,
+                            'message':'Sai dinh dang password'
+                        }})
+            elif matches_username == None:
+                return  jsonify({'error': {
+                            'code': 1,
+                            'message':'Sai dinh dang username'
+                        }})
+            elif matches_username == None:
+                return  jsonify({'error': {
+                            'code': 1,
+                            'message':'Sai dinh dang verify password'
+                        }})
+
 
 @user.route('/confirm/<token>')
 def confirm_email(token):
     user = validate_email_token(token)
-    if user != None:
-        return jsonify({'error':'The confirmation link is invalid or has expired.'})
+    if user == None:
+        return jsonify({'error': {
+                            'code': 1,
+                            'message':'Qua han dang ky, xin moi dang ky lai'
+                        }})
     
-    return jsonify({'noti': 'Success'})
+    return jsonify({'error': {
+                            'code': 0,
+                            'message':''
+                        },
+                            'data': 'Success'})
