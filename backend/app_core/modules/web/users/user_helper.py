@@ -3,9 +3,12 @@ import datetime
 from itsdangerous import (TimedJSONWebSignatureSerializer
                           as Serializer)
 
-from app_core.models import UserToken, db
+from app_core.models import UserToken, db, SignupRequest, User
 from config import SECRET_KEY
+from flask_mail import Message
 
+from flask_mail import Mail
+mail = Mail()
 
 def validate_token(token):
     token = UserToken.query.filter_by(token=token).first()
@@ -25,3 +28,36 @@ def generate_token(user, expiration=1800):
         'email': user.email,
     }).decode('utf-8')
     return token
+
+def generate_email_token(email):
+    s = Serializer(SECRET_KEY)
+    token = s.dumps({
+        'email': email
+    }).decode('utf-8')
+    return token
+
+def validate_email_token(token):
+    token = SignupRequest.query.filter_by(user_token_confirm=token).first()
+    if token:
+        if token.expired_time > datetime.datetime.now():
+            token.password = token.password.encode('utf-8')
+            token.password = User.hashed_password(token.password)
+            user = User(token.username, token.password, token.email)
+            db.session.add(user)
+            db.session.delete(token)
+            db.session.commit()
+            print(user)
+            return user
+        else:
+            db.session.delete(token)
+            db.session.flush()
+    return None
+
+def send_email(to, subject, template):
+    msg = Message(
+        subject,
+        recipients=[to],
+        html=template,
+        sender='dsh2t97@gmail.com'
+    )
+    mail.send(msg)

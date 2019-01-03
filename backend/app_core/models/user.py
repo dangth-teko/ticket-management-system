@@ -32,7 +32,7 @@ class User(BaseModel):
     def __init__(self, username, email, password):
         self.username = username
         self.email = email
-        self.password = User.hashed_password(password)
+        self.password = password
         self.is_admin = 0
         self.is_active = 1
         self.created_at = datetime.datetime.now()
@@ -41,22 +41,12 @@ class User(BaseModel):
     @staticmethod
     def hashed_password(password):
         return bcrypt.hashpw(password, bcrypt.gensalt())
-
+    
     @classmethod
-    def get_user_by_username_password(cls, username, password):
+    def get_user_by_username(cls, username):
         user = User.query.filter_by(username=username).first()
         if user:
-            if user.is_active == 0:
-                if ((datetime.datetime.now() > user.updated_at + datetime.timedelta(minutes=15))):
-                    user.is_active = 1
-                    db.session.flush()
-                else:
-                    return None
-            if user.is_active:
-                if bcrypt.checkpw(password.encode('utf-8'), user.password.encode('utf-8')):
-                    return user
-                else:
-                    return cls.insert_time(username)
+            return user
         else:
             return None
 
@@ -65,42 +55,3 @@ class User(BaseModel):
         user = User.query.filter_by(username=username).first()
         user.is_active = is_active
         db.session.flush()
-
-    @classmethod
-    def insert_time(cls, username):
-        history_wrong_pass = HistoryWrongPass.query.filter_by(username=username).first()
-        if not history_wrong_pass:
-            history_wrong_pass = HistoryWrongPass(username=username, time=[])
-            user = User.query.filter_by(username=username).first()
-            print(user)
-            history_wrong_pass.user = user
-            db.session.add(history_wrong_pass)
-        history_wrong_pass.time.append(datetime.datetime.now())
-        db.session.commit()
-        length_history = len(history_wrong_pass.time)
-
-        if length_history == 3:
-            if ((history_wrong_pass.time[2] - history_wrong_pass.time[0]) <= 5 * 60):
-                return {'capcha': True,
-                        'block': False}
-        elif length_history == 4:
-            if ((history_wrong_pass.time[3] - history_wrong_pass.time[1]) <= 5 * 60):
-                return {'capcha': True,
-                        'block': False}
-        elif length_history == 6:
-            history_wrong_pass.time.pop(0)
-        # print(length_history)
-        # db.session.flush()
-
-        # print(history_wrong_pass.time)
-        # print(history_wrong_pass.username)
-        if len(history_wrong_pass.time) == 5:
-            if ((history_wrong_pass.time[4] - history_wrong_pass.time[0]) <= 10 * 60):
-                history_wrong_pass.user.is_active = 0
-                return {'capcha': False,
-                        'block': True}
-            elif ((history_wrong_pass.time[4] - history_wrong_pass.time[2]) <= 5 * 60):
-                return {'capcha': True,
-                        'block': False}
-        db.session.commit()
-        return None
