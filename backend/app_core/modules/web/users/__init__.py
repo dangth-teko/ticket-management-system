@@ -1,7 +1,5 @@
 # coding=utf-8
-# import json
 import logging
-# import flask
 import re
 
 from flask import Blueprint, request, jsonify

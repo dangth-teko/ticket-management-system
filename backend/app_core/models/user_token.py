@@ -1,3 +1,4 @@
+# coding=utf-8
 import datetime
 
 from app_core.models import db, User, BaseModel
@@ -15,6 +16,11 @@ class UserToken(BaseModel):
 
     @classmethod
     def insert_token(cls, token, user_id):
+        """
+                insert token vào db.
+                :param token:
+                :param user_:
+                """
         user_token = UserToken.query.filter_by(token=token).first()
         if not user_token:
             user_token = UserToken(user_id=user_id, token=token, expired_time = datetime.datetime.now() + datetime.timedelta(minutes=30))
@@ -27,6 +33,11 @@ class UserToken(BaseModel):
 
     @classmethod
     def get_user_by_token(cls, token):
+        """
+                get user bằng token.
+                :param token:
+                :return user:
+                """
         token = UserToken.query.filter_by(token=token).first()
         if token:
             if token.expired_time > datetime.datetime.now():

@@ -1,3 +1,4 @@
+# coding=utf-8
 import datetime
 
 from sqlalchemy.dialects.postgresql import ARRAY
@@ -10,6 +11,7 @@ from app_core.models import db, BaseModel, User
 
 
 class HistoryWrongPass(BaseModel):
+    """Lưu 5 lần nhập sai pass gần nhất"""
     __tablename__ = 'history_wrong_pass'
     username = db.Column(db.String, db.ForeignKey('user.username'), nullable=False)
     time = db.Column(MutableList.as_mutable(ARRAY(db.TIMESTAMP)), default=[])
@@ -17,6 +19,11 @@ class HistoryWrongPass(BaseModel):
 
     @classmethod
     def insert_check_time(cls, username):
+        """
+                insert và check thời gian của lần nhập sai pass vào db.
+                :param username:
+                :return error:
+                """
         user = User.query.filter_by(username=username).first()
         error = {'code': 1, 'message': "Sai password vui lòng nhập lại!"}
         if user:

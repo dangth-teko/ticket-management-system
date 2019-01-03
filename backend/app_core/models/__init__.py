@@ -25,6 +25,7 @@ def init_app(app, **kwargs):
     # db.drop_all()
     # db.create_all()
 
+
 from .base_model import BaseModel
 from .post import Post
 from .user import User
