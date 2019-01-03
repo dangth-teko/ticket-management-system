@@ -1,10 +1,7 @@
 # coding=utf-8
 import logging
 import re
-
 from flask import Blueprint, request, jsonify
-
-# from app_core.models import db, Post
 from app_core.models import UserToken, User, HistoryWrongPass
 from app_core.modules.web.users.user_helper import generate_token
 from config import REGEX_USERNAME, REGEX_PASSWORD, FORMAT_RESPONSE

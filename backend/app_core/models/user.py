@@ -11,7 +11,6 @@ _logger = logging.getLogger(__name__)
 class User(BaseModel):
     """Lưu thông tin user"""
     __tablename__ = 'user'
-
     username = db.Column(db.String, primary_key=True, unique=True)
     email = db.Column(db.String, primary_key=True, unique=True)
     password = db.Column(db.String, nullable=False)
@@ -23,12 +22,10 @@ class User(BaseModel):
     history_wrong_pass = db.relationship("HistoryWrongPass", back_populates='user')
     logging = db.relationship("Logging", back_populates='user')
 
-    # băm password
     @staticmethod
-    def hashed_password(password):
+    def hash_password(password):
         return bcrypt.hashpw(password, bcrypt.gensalt())
 
-    @classmethod
     def get_user_by_username_password(cls, username, password):
         """
                 Get user
@@ -49,8 +46,3 @@ class User(BaseModel):
         else:
             return None
 
-    # @classmethod
-    # def update_status(cls, username, is_active):
-    #     user = User.query.filter_by(username=username).first()
-    #     user.is_active = is_active
-    #     db.session.flush()

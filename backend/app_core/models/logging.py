@@ -4,7 +4,6 @@ from app_core.models import db
 
 
 class Logging(BaseModel):
-    """Lưu lịch sử hoạt động của người dùng"""
     __tablename__ = 'logging'
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     action_id = db.Column(db.Integer, db.ForeignKey('action.id'), nullable=False)
