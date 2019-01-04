@@ -1,8 +1,10 @@
 import React, { Fragment } from 'react'
 import { Router, Route, Switch, Redirect } from 'react-router-dom'
-import {Center as CenterColumn} from 'components/Utils/Column'
+import { Center as CenterColumn } from 'components/Utils/Column'
 import history from 'utils/history'
 import ChangePassword from 'components/User/ChangePassword'
+import { ProfileTable } from 'components/User/Profile'
+
 
 const DefaultComponent = () => (
     <Fragment>
@@ -23,6 +25,7 @@ const Dashboard = props => (
                 }
             />
             <Route path="/dashboard" component={DefaultComponent} />
+            <Route path="/profile" component={ProfileTable} />
             <Redirect to="/dashboard" />
         </Switch>
     </Router>

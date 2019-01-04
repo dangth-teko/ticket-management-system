@@ -1,4 +1,5 @@
-import React, { Fragment } from 'react'
+import React, { Fragment, Component } from 'react'
+import { connect } from 'react-redux'
 import { Router, Switch, Route, Redirect } from 'react-router-dom'
 import history from 'utils/history'
 
@@ -8,8 +9,8 @@ import Login from 'components/User/Login'
 import Signup from 'components/User/Signup'
 import ResetPassword from 'components/User/ResetPassword'
 import DefaultLayout from 'components/DefaultLayout'
-import {Center as CenterColumn} from 'components/Utils/Column'
-import { check as verifyUser } from 'utils/auth'
+import { Center as CenterColumn } from 'components/Utils/Column'
+import { verify as verifyUser } from 'utils/auth'
 
 const UnauthenticatedComponent = (
     <Fragment>
@@ -25,14 +26,23 @@ const UnauthenticatedComponent = (
     </Fragment>
 )
 
-const App = () => {
-    const routers = verifyUser()
-        ? <DefaultLayout isAuthenticated={true} />
-        : UnauthenticatedComponent
+class App extends Component {
+    componentDidMount() {
+        verifyUser(this.props)
+    }
 
-    return (
-        <Router history={history}>{routers}</Router>
-    )
+    render() {
+        const routers = this.props.user.isAuthenticated
+            ? <DefaultLayout isAuthenticated={true} />
+            : UnauthenticatedComponent
+        return (
+            <Router history={history}>{routers}</Router>
+        )
+    }
 }
 
-export default App
+const mapStateToProps = state => ({
+    user: state.user,
+})
+
+export default connect(mapStateToProps)(App)

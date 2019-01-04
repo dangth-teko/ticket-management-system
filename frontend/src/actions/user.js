@@ -1,7 +1,9 @@
 import Axios from 'axios'
 import {
+    LOGIN_SUBMIT,
     LOGIN_SUCCESS,
     LOGIN_FAIL,
+    LOGIN_FAIL_3,
     SIGNUP_SUCCESS,
     SIGNUP_FAIL,
     RESET_PASSWORD_SUCCESS,
@@ -15,22 +17,23 @@ import {
     ERROR_FORBIDDEN,
     ERROR_WRONG_PASSWORD_3_TIMES
 } from 'constants/errors'
-import { logout } from 'utils/auth'
-
+import { signin, logout } from 'utils/auth'
 import { BASE_URL, apiConstants } from 'constants/api'
 
 const login = (username, password) => dispatch => {
     const request_url = BASE_URL + apiConstants.POST_LOGIN
     console.log('Submitting to...', request_url)
+    dispatch({ type: LOGIN_SUBMIT })
     Axios.post(request_url, { username, password })
         .then(({ status, data: { data, error } }) => {
             if (status !== 200) {
                 dispatch({ type: LOGIN_FAIL, data: error.message })
                 return
             }
-            console.log('DEBUG', error, data)
+
             switch (Number(error.code)) {
                 case ERROR_NONE:
+                    signin(data.token)
                     dispatch({ type: LOGIN_SUCCESS, data: data.token })
                     break
                 case ERROR_GENERIC:
@@ -40,7 +43,7 @@ const login = (username, password) => dispatch => {
                     logout()
                     break
                 case ERROR_WRONG_PASSWORD_3_TIMES:
-                    dispatch({ type: LOGIN_FAIL, data: "Bạn đã nhập sai password 3 lần trong 5 phút, vui lòng nhập captcha" })
+                    dispatch({ type: LOGIN_FAIL_3, data: "Bạn đã nhập sai password 3 lần trong 5 phút, vui lòng nhập captcha" })
                     break
                 default:
             }
@@ -51,11 +54,11 @@ const login = (username, password) => dispatch => {
         })
 }
 
-const signup = (username, password, email) => dispatch => {
+const signup = (username, password, confirmPassword, email) => dispatch => {
     const request_url = BASE_URL + apiConstants.POST_SIGNUP
     console.log('Submitting to...', request_url)
 
-    Axios.post(request_url, { username, password, email })
+    Axios.post(request_url, { username, password, confirmPassword, email })
         .then(({ status, data: { data, error } }) => {
             if (status !== 200) {
                 dispatch({ type: SIGNUP_FAIL, data: error.message })
@@ -122,10 +125,10 @@ const changePassword = (oldPassword, newPassword, newPasswordConfirm) => dispatc
             }
             switch (Number(error.code)) {
                 case ERROR_NONE:
-                    dispatch({type: CHANGE_PASSWORD_SUCCESS, data})
+                    dispatch({ type: CHANGE_PASSWORD_SUCCESS, data })
                     break
                 case ERROR_GENERIC:
-                    dispatch({type: CHANGE_PASSWORD_FAIL, data})
+                    dispatch({ type: CHANGE_PASSWORD_FAIL, data })
                     break
                 case ERROR_FORBIDDEN:
                     logout()

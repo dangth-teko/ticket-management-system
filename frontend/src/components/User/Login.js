@@ -9,9 +9,11 @@ import {
     Row,
     Card
 } from 'antd'
+import Recaptcha from 'react-google-recaptcha'
 import { login } from 'actions/user'
 import { validatePassword, validateUsername } from 'utils/validateInput'
 import { showNotification } from 'utils/notificate'
+import { LOGIN_FAIL_3 } from 'constants/actions'
 
 class Login extends React.Component {
     state = {
@@ -63,6 +65,15 @@ class Login extends React.Component {
                         placeholder="password" />
                     {this.state.errorPassword && <font color="red">{this.state.errorPassword}</font>}
 
+                    {this.props.error === LOGIN_FAIL_3 &&
+                        <Recaptcha
+                            sitekey="6LccxoYUAAAAALeIedc3Ya59wHVl-YgPcs9mlJmG"
+                            onChange={value => {
+                                console.log('Captcha debug...', value)
+                            }}
+                        />
+                    }
+
                     <Button type="primary" htmlType="submit" className="w-100 my-2">Đăng nhập</Button>
 
                     <Link to="/reset-password">Quên mật khẩu</Link>
@@ -77,8 +88,8 @@ class Login extends React.Component {
 }
 
 const mapStateToProps = state => ({
-    token: state.user.token,
     notification: state.user.notification,
+    error: state.user.error
 })
 
 export default connect(mapStateToProps, null)(Login)

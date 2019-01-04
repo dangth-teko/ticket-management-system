@@ -9,6 +9,6 @@ WORKDIR /frontend
 
 ADD package.json /frontend
 
-RUN yarn
+RUN yarn install
 
 ADD . /frontend

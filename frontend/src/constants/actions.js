@@ -4,6 +4,7 @@ export const CLEAR_NOTI     = 'CLEAR_NOTI'
 export const LOGIN_SUBMIT   = 'LOGIN_SUBMIT'
 export const LOGIN_SUCCESS  = 'LOGIN_SUCCESS'
 export const LOGIN_FAIL     = 'LOGIN_FAIL'
+export const LOGIN_FAIL_3   = 'LOGIN_FAIL_3'
 
 export const SIGNUP_SUBMIT  = 'SIGNUP_SUBMIT'
 export const SIGNUP_SUCCESS = 'SIGNUP_SUCCESS'

@@ -37,7 +37,7 @@ class Signup extends React.Component {
         const errorEmail = validateEmail(this.state.email)
         this.setState({ errorUsername, errorPassword, errorEmail })
         if (!(errorEmail || errorPassword || errorUsername)) {
-            this.props.dispatch(signup(this.state.username, this.state.password, this.state.email))
+            this.props.dispatch(signup(this.state.username, this.state.password, this.state.confirmPassword, this.state.email))
             history.push("/")
         }
     }

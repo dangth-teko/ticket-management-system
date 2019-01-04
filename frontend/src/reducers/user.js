@@ -1,6 +1,8 @@
 import {
+    LOGIN_SUBMIT,
     LOGIN_SUCCESS,
     LOGIN_FAIL,
+    LOGIN_FAIL_3,
     SIGNUP_SUCCESS,
     SIGNUP_FAIL,
     RESET_PASSWORD_SUCCESS,
@@ -11,29 +13,41 @@ import {
     NOTI_TYPE_FAIL,
     CLEAR_NOTI
 } from 'constants/actions'
-import { signin } from 'utils/auth'
 
 const initialState = {
     isAuthenticated: false,
     token: null,
-    notification: null
+    notification: null,
+    error: null
 }
 
 const UserReducer = (state = initialState, action) => {
     switch (action.type) {
+        case LOGIN_SUBMIT:
+            return {
+                ...state,
+                error: null
+            }
+
         case LOGIN_SUCCESS:
-            signin(action.data)
             return {
                 ...state,
                 notification: { type: NOTI_TYPE_SUCCESS, message: 'Đăng nhập thành công' },
-                isAuthenticated: true, token: action.data
+                isAuthenticated: true, token: action.data, error: null
             }
 
         case LOGIN_FAIL:
             return {
                 ...state,
                 notification: { type: NOTI_TYPE_FAIL, message: action.data },
-                isAuthenticated: false, token: null, error: action.data
+                isAuthenticated: false, token: null, error: null
+            }
+
+        case LOGIN_FAIL_3:
+            return {
+                ...state,
+                notification :{type: NOTI_TYPE_FAIL, message: action.data},
+                isAuthenticated: false, token: null, error: LOGIN_FAIL_3
             }
 
         case SIGNUP_SUCCESS:
