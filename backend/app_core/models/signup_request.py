@@ -1,8 +1,7 @@
-import datetime
+# coding=utf-8
 
-from app_core.models.base_model import BaseModel
-from app_core.models import User
-from app_core.models import db
+import datetime
+from app_core.models import db, User, BaseModel
 
 
 class SignupRequest(BaseModel):
@@ -17,7 +16,7 @@ class SignupRequest(BaseModel):
     def __init__(self, username, email, password, token):
         self.username = username
         self.email = email
-        self.password = User.hashed_password(password)
+        self.password = User.hash_password(password)
         self.is_admin = 0
-        self.user_token_confirm=token
+        self.user_token_confirm = token
         self.expired_time = datetime.datetime.now() + datetime.timedelta(minutes=30)

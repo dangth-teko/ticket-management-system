@@ -1,3 +1,4 @@
+# coding=utf-8
 from app_core.models.base_model import BaseModel
 from app_core.models import db
 

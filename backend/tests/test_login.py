@@ -1,17 +1,22 @@
+# coding=utf-8
+
 import logging
 import pytest
 import http.client
 
 from app_core.models import User, db
 
+from tests.faker import fake
+
+
 _logger = logging.getLogger(__name__)
 
 
 def test_login():
-    user = User(username='xhuiklm10', email='thdang1003@gmail.com', password='Haidang97'.encode('utf-8'))
-    db.session.add(user)
-    db.session.flush()
-    data = {'username': 'xhuiklm10', 'password': 'Haidang97'}
+    password = "Test1" + fake.str()
+    user = fake.user(password=password.encode('utf-8'))
+    data = {'username': user.username, 'password': password}
+
     data_test = _request("POST", 'localhost:5000', '/login', data)
     print(data_test)
     assert data_test != None
