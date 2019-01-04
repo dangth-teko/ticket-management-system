@@ -6,6 +6,7 @@ import config
 import logging.config
 
 from . import models, modules
+from app_core.modules import mail
 
 _logger = logging.getLogger(__name__)
 
@@ -28,7 +29,12 @@ def create_app():
         app.config.from_pyfile('config.py', silent=True)
         app.config.from_pyfile(instance_config_file, silent=True)
         app.static_folder = config.STATIC_FOLDER
-
+        app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+        app.config['MAIL_PORT'] = 465
+        app.config['MAIL_USERNAME'] = 'dsh2t97@gmail.com'
+        app.config['MAIL_PASSWORD'] = 'bfddkhht'
+        app.config['MAIL_USE_TLS'] = False
+        app.config['MAIL_USE_SSL'] = True
     app = flask.Flask(
         __name__,
         instance_relative_config=True,
@@ -48,7 +54,7 @@ def create_app():
     # Sub-modules initialization
     models.init_app(app)
     modules.init_app(app)
-
+    mail.init_app(app)
     return app
 
 
