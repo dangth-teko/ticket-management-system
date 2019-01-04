@@ -15,6 +15,9 @@ _logger = logging.getLogger(__name__)
 
 user = Blueprint('user', __name__)
 
+@user.route('/change-password', methods=['PATCH'])
+def change_password():
+    pass
 
 # @user.route('/login', methods=['GET', 'POST'])
 # def login():
