@@ -24,7 +24,7 @@ class User(BaseModel):
 
     @staticmethod
     def hash_password(password):
-        return bcrypt.hashpw(password, bcrypt.gensalt())
+        return (bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())).decode('utf-8')
 
     @classmethod
     def get_user_by_username_password(cls, username, password):
@@ -47,3 +47,15 @@ class User(BaseModel):
         else:
             return None
 
+    @classmethod
+    def change_password(cls, user, newPassword):
+        """
+                Get user
+                :param username:
+                :param password:
+                :return user:
+                """
+        user.password = cls.hash_password(newPassword)
+        logging.error(user.password)
+        db.session.commit()
+        return True

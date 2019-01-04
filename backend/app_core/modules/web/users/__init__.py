@@ -1,13 +1,11 @@
 # coding=utf-8
 # import json
 import logging
-# import flask
 import re
 
 from flask import Blueprint, render_template, request, jsonify
 
-# from app_core.models import db, Post
-from app_core.models import UserToken, User
+from app_core.models import UserToken, User, HistoryPassChange
 from app_core.modules.web.users.user_helper import validate_token, generate_token
 from config import REGEX_USERNAME, REGEX_PASSWORD
 
@@ -15,27 +13,44 @@ _logger = logging.getLogger(__name__)
 
 user = Blueprint('user', __name__)
 
-@user.route('/change-password', methods=['PATCH'])
-def change_password():
-    pass
 
-# @user.route('/login', methods=['GET', 'POST'])
-# def login():
-#     if request.method == 'POST':
-#         data = request.get_json()
-#         if 'access_token' in request.cookies:
-#             data_token = validate_token(request.cookies['access_token'])
-#             return jsonify({'access_token': data_token})
-#         elif 'username' in data and 'password' in data:
-#             matches_username = re.match(REGEX_USERNAME, data['username'], re.MULTILINE | re.VERBOSE)
-#             matches_password = re.match(REGEX_PASSWORD, data['password'], re.MULTILINE | re.VERBOSE)
-#             if matches_password != None and matches_username != None:
-#                 user = User.get_user_by_username_password(data['username'], data['password'])
-#                 if user:
-#                     token = generate_token(user)
-#                     UserToken.insert_token(token, user.id)
-#                     return jsonify({'token': token})
-#                 else:
-#                     return None
-#             else:
-#                 return jsonify({'noti': "Sai dinh dang"})
+@user.route('/api/change-password', methods=['POST'])
+def change_password():
+    format_response = {
+        "error": {
+            "code": 0,
+            "message": ""
+        },
+        "data": {}
+    }
+    if request.method == 'POST':
+        if 'access_token' in request.cookies:
+            data = request.get_json()
+            current_user = UserToken.get_user_by_token(request.cookies['access_token'])
+            if current_user:
+                if data is None or \
+                        data['oldPassword'] is None or \
+                        data['newPassword'] is None or \
+                        data['newPasswordConfirm'] is None:
+                    format_response['error']['code'] = 1
+                    format_response['error']['message'] = 'Request sai định dạng'
+                elif not HistoryPassChange.check_password(data['oldPassword']):
+                    format_response['error']['code'] = 1
+                    format_response['error']['message'] = 'Sai password'
+                elif data['newPassword'] != data['newPasswordConfirm']:
+                    format_response['error']['code'] = 1
+                    format_response['error']['message'] = 'Password không giống nhau'
+                elif not HistoryPassChange.check_history_password(data['newPassword']):
+                    format_response['error']['code'] = 1
+                    format_response['error']['message'] = 'Mật khẩu không được giống với 5 mật khẩu gần nhất'
+                else:
+                    matches_password = re.match(REGEX_PASSWORD, data['newPassword'], re.MULTILINE | re.VERBOSE)
+                    if matches_password is not None:
+                        User.change_password(current_user, data['newPassword'])
+            else:
+                format_response['error']['code'] = 1
+                format_response['error']['message'] = 'Sai Token hoặc Token hết hạn!'
+        else:
+            format_response['error']['code'] = 2
+            format_response['error']['message'] = 'Không có Token!'
+        return jsonify(format_response)
