@@ -4,19 +4,22 @@ import re
 from flask import Blueprint, request, jsonify
 from app_core.models import UserToken, User, HistoryWrongPass
 from app_core.modules.web.users.user_helper import generate_token
-from config import REGEX_USERNAME, REGEX_PASSWORD, FORMAT_RESPONSE
+from config import REGEX_USERNAME, REGEX_PASSWORD
 
 _logger = logging.getLogger(__name__)
 
 user = Blueprint('user', __name__)
 
 
-@user.route('/login', methods=['GET', 'POST'])
+@user.route('/signin', methods=['GET', 'POST'])
 def login():
+    FORMAT_RESPONSE = {
+        "error": {"code": 0, "message": ""},
+        "data": {}}
     if request.method == 'POST':
         data = request.get_json()
-        if 'access_token' in data:
-            user = UserToken.get_user_by_token(data['access_token'])
+        if 'access_token' in request.cookies:
+            user = UserToken.get_user_by_token(request.cookies['access_token'])
             if user:
                 FORMAT_RESPONSE['data'] = {'access_token': user,
                                            'profile': {'email': user.email, 'username': user.username}}
@@ -37,6 +40,7 @@ def login():
                 else:
                     FORMAT_RESPONSE['error'] = HistoryWrongPass.insert_check_time(data['username'])
             else:
+                # print("AAAAAAA")
                 FORMAT_RESPONSE['error']['code'] = 1
                 FORMAT_RESPONSE['error']['message'] = "Sai định dạng username/password!"
         return jsonify(FORMAT_RESPONSE)

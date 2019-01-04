@@ -26,6 +26,7 @@ class User(BaseModel):
     def hash_password(password):
         return bcrypt.hashpw(password, bcrypt.gensalt())
 
+    @classmethod
     def get_user_by_username_password(cls, username, password):
         """
                 Get user
