@@ -11,11 +11,11 @@ from app_core.models import db, BaseModel, User
 
 
 class HistoryWrongPass(BaseModel):
+    """Lưu 5 lần nhập sai password gần nhất"""
     __tablename__ = 'history_wrong_pass'
     username = db.Column(db.String, db.ForeignKey('user.username'), nullable=False)
     time = db.Column(MutableList.as_mutable(ARRAY(db.TIMESTAMP)), default=[])
     user = db.relationship("User", back_populates="history_wrong_pass")
-
 
     @classmethod
     def insert_check_time(cls, username):
@@ -55,4 +55,3 @@ class HistoryWrongPass(BaseModel):
         else:
             error = {'code': 1, 'message': "Username không tồn tại"}
         return error
-

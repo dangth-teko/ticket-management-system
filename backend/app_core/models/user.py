@@ -4,6 +4,7 @@ import logging
 import datetime
 
 from flask_bcrypt import Bcrypt
+from sqlalchemy import or_
 
 from app_core.models import db, BaseModel
 
@@ -38,8 +39,13 @@ class User(BaseModel):
         self.updated_at = datetime.datetime.now()
 
     @classmethod
-    def get_user_by_username(cls, username):
-        user = User.query.filter_by(username=username).first()
+    def get_user_by_username_or_email(cls, username, email):
+        """
+            Get user
+            :param username:
+            :return user:
+        """
+        user = User.query.filter(or_(User.username == username, User.email == email)).first()
         if user:
             return user
         else:
@@ -47,6 +53,11 @@ class User(BaseModel):
 
     @staticmethod
     def hash_password(password):
+        """
+            Hash password
+            :param password:
+            :return hashed_password:
+        """
         hash = bcrypt.generate_password_hash(password, 10)
         return hash.decode('utf-8')
 

@@ -1,4 +1,3 @@
-
 # coding=utf-8
 import datetime
 
@@ -21,7 +20,8 @@ class UserToken(BaseModel):
                 """
         user_token = UserToken.query.filter_by(token=token).first()
         if not user_token:
-            user_token = UserToken(user_id=user_id, token=token, expired_time = datetime.datetime.now() + datetime.timedelta(minutes=30))
+            user_token = UserToken(user_id=user_id, token=token,
+                                   expired_time=datetime.datetime.now() + datetime.timedelta(minutes=30))
             db.session.add(user_token)
             user = User.query.filter_by(id=user_id).first()
             user_token.user = user

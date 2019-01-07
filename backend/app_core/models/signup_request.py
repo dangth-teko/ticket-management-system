@@ -5,6 +5,8 @@ from app_core.models import db, User, BaseModel
 
 
 class SignupRequest(BaseModel):
+    """Signup Request Model
+    Lưu thông tin user chưa được active"""
     __tablename__ = 'signup_request'
     username = db.Column(db.String, nullable=False)
     email = db.Column(db.String, nullable=False)
@@ -14,6 +16,11 @@ class SignupRequest(BaseModel):
     user_token_confirm = db.Column(db.String, nullable=False)
 
     def __init__(self, username, email, password, token):
+        """Init Signup Request model
+        :param username
+        :param email
+        :param password
+        :param token"""
         self.username = username
         self.email = email
         self.password = User.hash_password(password)

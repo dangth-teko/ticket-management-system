@@ -14,6 +14,9 @@ mail = Mail()
 
 
 def validate_token(token):
+    """Validate token
+        :param token
+        """
     token = UserToken.query.filter_by(token=token).first()
     if token:
         if token.expired_time > datetime.datetime.now():
@@ -38,32 +41,11 @@ def generate_token(user, expiration=1800):
     return token
 
 
-def generate_email_token(email):
-    s = Serializer(SECRET_KEY)
-    token = s.dumps({
-        'email': email
-    }).decode('utf-8')
-    return token
-
-
-def validate_email_token(token):
-    # print(token)
-    token = SignupRequest.query.filter_by(user_token_confirm=token).first()
-    if token:
-        if token.expired_time > datetime.datetime.now():
-            user = User(token.username, token.email, token.password)
-            db.session.add(user)
-            db.session.delete(token)
-            db.session.commit()
-            print(user)
-            return user
-        else:
-            db.session.delete(token)
-            db.session.flush()
-    return None
-
-
 def send_email(to, subject, template):
+    """Send email
+    :param to
+    :param subject
+    :param template"""
     msg = Message(
         subject,
         recipients=[to],

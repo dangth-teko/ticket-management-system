@@ -4,6 +4,10 @@ from app_core.models import db
 
 
 class Logging(BaseModel):
+    """
+    Table Logging
+    Lưu dữ liêu tương tác của người dùng
+    """
     __tablename__ = 'logging'
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     action_id = db.Column(db.Integer, db.ForeignKey('action.id'), nullable=False)
