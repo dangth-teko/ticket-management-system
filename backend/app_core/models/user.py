@@ -50,6 +50,5 @@ class User(BaseModel):
     @classmethod
     def change_password(cls, user, newPassword):
         user.password = cls.hash_password(newPassword)
-        logging.error(user.password)
         db.session.commit()
         return True

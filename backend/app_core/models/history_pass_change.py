@@ -25,7 +25,6 @@ class HistoryPassChange(BaseModel):
     @classmethod
     def check_password(cls, user_id, old_password):
         current_password = cls.query.filter_by(user_id=user_id).first().history_pass_change[-1]
-        _logger.error(current_password)
         return bcrypt.checkpw(old_password.encode('utf-8'), current_password.encode('utf-8'))
 
     @classmethod
@@ -34,5 +33,4 @@ class HistoryPassChange(BaseModel):
         if len(passwords.history_pass_change) >= 5:
             passwords.history_pass_change.pop(0)
         passwords.history_pass_change.append(User.hash_password(new_password))
-        _logger.error(len(passwords.history_pass_change))
         db.session.commit()
