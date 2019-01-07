@@ -1,4 +1,4 @@
-import bcrypt
+from flask_bcrypt import Bcrypt
 import logging
 
 from sqlalchemy.ext.mutable import MutableList
@@ -8,6 +8,8 @@ from sqlalchemy.dialects.postgresql import ARRAY
 
 _logger = logging.getLogger(__name__)
 
+bcrypt = Bcrypt()
+
 class HistoryPassChange(BaseModel):
     __tablename__ = 'history_pass_change'
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
@@ -15,20 +17,45 @@ class HistoryPassChange(BaseModel):
     user = db.relationship("User", back_populates="history_pass_change")
 
     @classmethod
+    def check_current_password(cls, user_id, old_password):
+        """
+        Kiểm tra có khớp với mật khẩu hiện tại hay không
+        :param user_id: Id của user
+        :type user_id: Integer
+        :param old_password: Mật khẩu cũ
+        :type old_password: String
+        :return: Kết quả so sánh
+        :rtype: Boolean
+        """
+        current_password = cls.query.filter_by(user_id=user_id).first().history_pass_change[-1]
+        return bcrypt.check_password_hash(current_password, old_password)
+
+    @classmethod
     def check_history_password(cls, user_id, new_password):
+        """
+        Kiểm tra 5 password gần nhất xem có trùng với password mới hay không
+        :param user_id: Id của user
+        :type user_id: Integer
+        :param new_password: Mật khẩu mới
+        :type new_password: String
+        :return: Kết quả so sánh
+        :rtype: Boolean
+        """
         passwords = HistoryPassChange.query.filter_by(user_id=user_id).first().history_pass_change
         for password in passwords:
-            if bcrypt.checkpw(new_password.encode('utf-8'), password.encode('utf-8')):
+            if bcrypt.check_password_hash(password, new_password):
                 return False
         return True
 
     @classmethod
-    def check_password(cls, user_id, old_password):
-        current_password = cls.query.filter_by(user_id=user_id).first().history_pass_change[-1]
-        return bcrypt.checkpw(old_password.encode('utf-8'), current_password.encode('utf-8'))
-
-    @classmethod
     def add_password(cls, user_id, new_password):
+        """
+        Thêm mật khẩu mới vào lịch sử thay đổi
+        :param user_id: Id của user
+        :type user_id: Integer
+        :param new_password: Mật khẩu mới
+        :type new_password: String
+        """
         passwords = HistoryPassChange.query.filter_by(user_id=user_id).first()
         if len(passwords.history_pass_change) >= 5:
             passwords.history_pass_change.pop(0)

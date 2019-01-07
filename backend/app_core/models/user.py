@@ -1,11 +1,15 @@
 # coding=utf-8
-import bcrypt
+
 import logging
 import datetime
+
+from flask_bcrypt import Bcrypt
 
 from app_core.models import db, BaseModel
 
 _logger = logging.getLogger(__name__)
+
+bcrypt = Bcrypt()
 
 
 class User(BaseModel):
@@ -24,7 +28,8 @@ class User(BaseModel):
 
     @staticmethod
     def hash_password(password):
-        return (bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())).decode('utf-8')
+        hash = bcrypt.generate_password_hash(password, 10)
+        return hash.decode('utf-8')
 
     @classmethod
     def get_user_by_username_password(cls, username, password):
@@ -49,6 +54,10 @@ class User(BaseModel):
 
     @classmethod
     def change_password(cls, user, newPassword):
+        """
+        Thay đổi password
+        :param user:
+        :param newPassword:
+        """
         user.password = cls.hash_password(newPassword)
         db.session.commit()
-        return True
