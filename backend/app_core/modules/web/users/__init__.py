@@ -39,6 +39,7 @@ def register():
                     if user != None:
                         FORMAT_RESPONSE['error']['code'] = 1
                         FORMAT_RESPONSE['error']['message'] = "Email hoặc username đã tồn tại!"
+                    else:
                         passw = data['password']
                         token = generate_token(data)
                         user_request = SignupRequest(username=data['username'], email=data['email'],
@@ -57,7 +58,7 @@ def register():
             elif matches_username == None:
                 FORMAT_RESPONSE['error']['code'] = 1
                 FORMAT_RESPONSE['error']['message'] = "Sai định dạng username"
-            elif matches_username == None:
+            elif matches_verify_password == None:
                 FORMAT_RESPONSE['error']['code'] = 1
                 FORMAT_RESPONSE['error']['message'] = "Sai định dạng verify password!"
         return jsonify(FORMAT_RESPONSE)

@@ -1,9 +1,5 @@
 # coding=utf-8
 import datetime
-# import json
-# import types
-
-from flask import jsonify
 from itsdangerous import (TimedJSONWebSignatureSerializer
                           as Serializer)
 
