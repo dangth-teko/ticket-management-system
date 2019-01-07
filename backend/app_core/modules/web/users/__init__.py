@@ -34,19 +34,23 @@ def change_password():
                         data['newPasswordConfirm'] is None:
                     format_response['error']['code'] = 1
                     format_response['error']['message'] = 'Request sai định dạng'
-                elif not HistoryPassChange.check_password(data['oldPassword']):
+                elif not HistoryPassChange.check_password(current_user.id, data['oldPassword']):
                     format_response['error']['code'] = 1
                     format_response['error']['message'] = 'Sai password'
                 elif data['newPassword'] != data['newPasswordConfirm']:
                     format_response['error']['code'] = 1
                     format_response['error']['message'] = 'Password không giống nhau'
-                elif not HistoryPassChange.check_history_password(data['newPassword']):
+                elif not HistoryPassChange.check_history_password(current_user.id, data['newPassword']):
                     format_response['error']['code'] = 1
                     format_response['error']['message'] = 'Mật khẩu không được giống với 5 mật khẩu gần nhất'
                 else:
                     matches_password = re.match(REGEX_PASSWORD, data['newPassword'], re.MULTILINE | re.VERBOSE)
                     if matches_password is not None:
                         User.change_password(current_user, data['newPassword'])
+                        HistoryPassChange.add_password(current_user.id, data['newPassword'])
+                    else:
+                        format_response['error']['code'] = 1
+                        format_response['error']['message'] = 'Password không đúng định dạng'
             else:
                 format_response['error']['code'] = 1
                 format_response['error']['message'] = 'Sai Token hoặc Token hết hạn!'

@@ -49,12 +49,6 @@ class User(BaseModel):
 
     @classmethod
     def change_password(cls, user, newPassword):
-        """
-                Get user
-                :param username:
-                :param password:
-                :return user:
-                """
         user.password = cls.hash_password(newPassword)
         logging.error(user.password)
         db.session.commit()
