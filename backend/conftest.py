@@ -23,4 +23,5 @@ def app(request):
         ctx.pop()
 
     request.addfinalizer(teardown)
+    # models.db.create_all()
     return app

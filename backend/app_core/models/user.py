@@ -79,5 +79,4 @@ class User(BaseModel):
             if user.is_active == 1:
                 if bcrypt.check_password_hash(user.password, password):
                     return user
-        else:
-            return None
+        return None

@@ -8,15 +8,6 @@ fake = faker.Faker()
 
 
 class TicketProvider(faker.providers.BaseProvider):
-    # @staticmethod
-    # def string(length=15):
-    #     """
-    #     Return a random string
-    #     :return: a random string
-    #     :rtype: string
-    #     """
-    #     return ''.join(
-    #         random.choice(string.ascii_letters) for i in range(length))
 
     @staticmethod
     def url():
