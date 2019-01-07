@@ -1,6 +1,9 @@
 # coding=utf-8
 import datetime
+# import json
+# import types
 
+from flask import jsonify
 from itsdangerous import (TimedJSONWebSignatureSerializer
                           as Serializer)
 
@@ -33,19 +36,45 @@ def generate_token(user, expiration=1800):
             :param user:
             :return token:
             """
+    if isinstance(user, dict):
+        email = user['email']
+    else:
+        email = user.email
     s = Serializer(SECRET_KEY, expires_in=expiration)
     token = s.dumps({
-        'id': user.id,
-        'email': user.email,
+        'email': email,
     }).decode('utf-8')
     return token
 
 
+def validate_signup_request_token(token):
+    """
+    validate token for user chua active
+    :param token:
+    :return:
+    """
+    token = SignupRequest.query.filter_by(user_token_confirm=token).first()
+    if token:
+        if token.expired_time > datetime.datetime.now():
+            user = User(token.username, token.email, token.password)
+            db.session.add(user)
+            db.session.delete(token)
+            db.session.commit()
+            return user
+        else:
+            db.session.delete(token)
+            db.session.flush()
+    return None
+
+
 def send_email(to, subject, template):
-    """Send email
-    :param to
-    :param subject
-    :param template"""
+    """
+    Gui email
+    :param to:
+    :param subject:
+    :param template:
+    :return:
+    """
     msg = Message(
         subject,
         recipients=[to],

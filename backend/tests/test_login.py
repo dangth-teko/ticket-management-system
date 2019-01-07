@@ -14,9 +14,8 @@ _logger = logging.getLogger(__name__)
 
 def test_login():
     password = "Test1" + fake.str()
-    user = fake.user(password=password.encode('utf-8'))
+    user = fake.user(password=password)
     data = {'username': user.username, 'password': password}
-
     data_test = _request("POST", 'localhost:5000', '/login', data)
     print(data_test)
     assert data_test != None
