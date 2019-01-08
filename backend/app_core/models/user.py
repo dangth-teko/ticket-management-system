@@ -4,6 +4,7 @@ import logging
 import datetime
 
 from flask_bcrypt import Bcrypt
+
 from sqlalchemy import or_
 
 from app_core.models import db, BaseModel
@@ -26,8 +27,6 @@ class User(BaseModel):
     history_pass_change = db.relationship("HistoryPassChange", back_populates='user')
     history_wrong_pass = db.relationship("HistoryWrongPass", back_populates='user')
     logging = db.relationship("Logging", back_populates='user')
-
-    # db.UniqueConstraint(username, email, name='uix_1')
 
     def __init__(self, username, email, password):
         self.username = username
@@ -85,3 +84,14 @@ class User(BaseModel):
             return user
         else:
             return None
+
+    @classmethod
+    def change_password(cls, user, newPassword):
+        """
+        Thay đổi password
+        :param user:
+        :param newPassword:
+        """
+        user.password = cls.hash_password(newPassword)
+        db.session.commit()
+

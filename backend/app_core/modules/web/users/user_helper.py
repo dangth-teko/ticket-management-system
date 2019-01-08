@@ -3,7 +3,7 @@ import datetime
 from itsdangerous import (TimedJSONWebSignatureSerializer
                           as Serializer)
 
-from app_core.models import UserToken, db, SignupRequest, User
+from app_core.models import UserToken, db, SignupRequest, User, HistoryPassChange
 from config import SECRET_KEY
 from flask_mail import Message
 
@@ -49,16 +49,19 @@ def validate_signup_request_token(token):
     :param token:
     :return:
     """
-    token = SignupRequest.query.filter_by(user_token_confirm=token).first()
-    if token:
-        if token.expired_time > datetime.datetime.now():
-            user = User(token.username, token.email, token.password)
+    request = SignupRequest.query.filter_by(user_token_confirm=token).first()
+    if request:
+        if request.expired_time > datetime.datetime.now():
+            user = User(request.username, request.email, request.password)
+            password = HistoryPassChange(request.id, request.password)
+
             db.session.add(user)
-            db.session.delete(token)
+            db.session.add(password)
+            db.session.delete(request)
             db.session.commit()
             return user
         else:
-            db.session.delete(token)
+            db.session.delete(request)
             db.session.flush()
     return None
 
