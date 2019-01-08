@@ -70,13 +70,18 @@ class User(BaseModel):
                 :return user:
                 """
         user = User.query.filter_by(username=username).first()
-        if user:
-            if user.is_active == 0:
-                if ((datetime.datetime.now() > user.updated_at + datetime.timedelta(minutes=15))):
-                    user.is_active = 1
-                    user.updated_at = datetime.datetime.now()
-                    db.session.flush()
-            if user.is_active == 1:
-                if bcrypt.check_password_hash(user.password, password):
-                    return user
-        return None
+        if not user:
+            return None
+
+        if user.is_active == 0:
+            if datetime.datetime.now() > user.updated_at + datetime.timedelta(minutes=15):
+                user.is_active = 1
+                user.updated_at = datetime.datetime.now()
+                db.session.flush()
+                return user
+            else:
+                return None
+        elif bcrypt.check_password_hash(user.password, password):
+            return user
+        else:
+            return None
