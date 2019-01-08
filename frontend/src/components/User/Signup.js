@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-
+//Import components
 import {
     Form,
     Row,
@@ -9,11 +9,11 @@ import {
     Icon,
     Card
 } from "antd"
-
+import Spin from 'components/Utils/Spin'
+// Import functions
 import { signup } from 'actions/user'
 import { validateUsername, validatePassword, validateEmail } from 'utils/validateInput'
 import { showNotification } from 'utils/notificate'
-import history from 'utils/history'
 
 class Signup extends React.Component {
     state = {
@@ -38,7 +38,6 @@ class Signup extends React.Component {
         this.setState({ errorUsername, errorPassword, errorEmail })
         if (!(errorEmail || errorPassword || errorUsername)) {
             this.props.dispatch(signup(this.state.username, this.state.password, this.state.confirmPassword, this.state.email))
-            history.push("/")
         }
     }
 
@@ -90,6 +89,7 @@ class Signup extends React.Component {
                         onChange={this.handleFormChange} />
                     {this.state.errorEmail && <font color="red">{this.state.errorEmail}</font>}
 
+                    {this.props.pending && <Spin>Sending...</Spin>}
                     <Button type="primary" htmlType="submit" className="my-2 w-100">Đăng ký</Button>
                 </Form>
             </Card>
@@ -98,7 +98,8 @@ class Signup extends React.Component {
 }
 
 const mapPropsToState = state => ({
-    notification: state.user.notification
+    notification: state.user.notification,
+    pending: state.user.pending
 })
 
 export default connect(mapPropsToState, null)(Signup)

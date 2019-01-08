@@ -28,6 +28,7 @@ const UnauthenticatedComponent = (
 
 class App extends Component {
     componentDidMount() {
+        console.log('Component App did mount...')
         verifyUser(this.props)
     }
 

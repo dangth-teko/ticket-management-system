@@ -9,6 +9,9 @@ import {
     Card
 } from 'antd'
 
+// Import components
+import Spin from 'components/Utils/Spin'
+// Import function
 import { resetPassword } from 'actions/user'
 import { validateEmail, validateUsername } from 'utils/validateInput'
 import { showNotification } from 'utils/notificate'
@@ -65,6 +68,7 @@ class ResetPassword extends React.Component {
                         placeholder="email" />
                     {this.state.errorEmail && <font color="red">{this.state.errorEmail}</font>}
 
+                    {this.props.pending && <Spin>Sending...</Spin>}
                     <Button type="primary" htmlType="submit" className="my-2 w-100">Reset password</Button>
                 </Form>
             </Card>
@@ -73,7 +77,8 @@ class ResetPassword extends React.Component {
 }
 
 const mapStateToProps = state => ({
-    notification: state.user.notification
+    notification: state.user.notification,
+    pending: state.user.pending
 })
 
 export default connect(mapStateToProps, null)(ResetPassword)

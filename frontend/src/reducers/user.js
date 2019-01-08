@@ -5,6 +5,7 @@ import {
     LOGIN_FAIL_3,
     SIGNUP_SUCCESS,
     SIGNUP_FAIL,
+    SIGNUP_SUBMIT,
     RESET_PASSWORD_SUCCESS,
     RESET_PASSWORD_FAIL,
     CHANGE_PASSWORD_SUCCESS,
@@ -18,7 +19,8 @@ const initialState = {
     isAuthenticated: false,
     token: null,
     notification: null,
-    error: null
+    error: null,
+    pending: false
 }
 
 const UserReducer = (state = initialState, action) => {
@@ -32,7 +34,7 @@ const UserReducer = (state = initialState, action) => {
         case LOGIN_SUCCESS:
             return {
                 ...state,
-                notification: { type: NOTI_TYPE_SUCCESS, message: 'Đăng nhập thành công' },
+                notification: { type: NOTI_TYPE_SUCCESS },
                 isAuthenticated: true, token: action.data, error: null
             }
 
@@ -50,16 +52,24 @@ const UserReducer = (state = initialState, action) => {
                 isAuthenticated: false, token: null, error: LOGIN_FAIL_3
             }
 
+        case SIGNUP_SUBMIT:
+            return {
+                ...state,
+                pending: true
+            }
+
         case SIGNUP_SUCCESS:
             return {
                 ...state,
-                notification: { type: NOTI_TYPE_SUCCESS, message: 'Đăng ký tài khoản thành công, truy cập đường link đã được gửi tới email trong vòng 30 phút để kích hoạt tài khoản' }
+                notification: { type: NOTI_TYPE_SUCCESS, message: 'Đăng ký tài khoản thành công, truy cập đường link đã được gửi tới email trong vòng 30 phút để kích hoạt tài khoản' },
+                pending: false
             }
 
         case SIGNUP_FAIL:
             return {
                 ...state,
-                notification: { type: NOTI_TYPE_FAIL, message: action.data }
+                notification: { type: NOTI_TYPE_FAIL, message: action.data },
+                pending: false
             }
 
         case CHANGE_PASSWORD_SUCCESS:

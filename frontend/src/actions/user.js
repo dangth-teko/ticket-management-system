@@ -1,4 +1,3 @@
-import Axios from 'axios'
 import {
     LOGIN_SUBMIT,
     LOGIN_SUCCESS,
@@ -6,6 +5,7 @@ import {
     LOGIN_FAIL_3,
     SIGNUP_SUCCESS,
     SIGNUP_FAIL,
+    SIGNUP_SUBMIT,
     RESET_PASSWORD_SUCCESS,
     RESET_PASSWORD_FAIL,
     CHANGE_PASSWORD_SUCCESS,
@@ -18,13 +18,13 @@ import {
     ERROR_WRONG_PASSWORD_3_TIMES
 } from 'constants/errors'
 import { signin, logout } from 'utils/auth'
-import { BASE_URL, apiConstants } from 'constants/api'
+import { apiConstants } from 'constants/api'
+import history from 'utils/history'
+import Request from 'utils/request'
 
 const login = (username, password) => dispatch => {
-    const request_url = BASE_URL + apiConstants.POST_LOGIN
-    console.log('Submitting to...', request_url)
     dispatch({ type: LOGIN_SUBMIT })
-    Axios.post(request_url, { username, password })
+    Request.post(apiConstants.POST_LOGIN, { username, password })
         .then(({ status, data: { data, error } }) => {
             if (status !== 200) {
                 dispatch({ type: LOGIN_FAIL, data: error.message })
@@ -34,6 +34,8 @@ const login = (username, password) => dispatch => {
             switch (Number(error.code)) {
                 case ERROR_NONE:
                     signin(data.token)
+                    console.log(data.token)
+                    Request.defaults.headers.common['Authorization'] = data.token
                     dispatch({ type: LOGIN_SUCCESS, data: data.token })
                     break
                 case ERROR_GENERIC:
@@ -55,10 +57,8 @@ const login = (username, password) => dispatch => {
 }
 
 const signup = (username, password, confirmPassword, email) => dispatch => {
-    const request_url = BASE_URL + apiConstants.POST_SIGNUP
-    console.log('Submitting to...', request_url)
-
-    Axios.post(request_url, { username, password, confirmPassword, email })
+    dispatch({ type: SIGNUP_SUBMIT })
+    Request.post(apiConstants.POST_SIGNUP, { username, password, confirmPassword, email })
         .then(({ status, data: { data, error } }) => {
             if (status !== 200) {
                 dispatch({ type: SIGNUP_FAIL, data: error.message })
@@ -67,6 +67,7 @@ const signup = (username, password, confirmPassword, email) => dispatch => {
             switch (Number(error.code)) {
                 case ERROR_NONE:
                     dispatch({ type: SIGNUP_SUCCESS, data })
+                    history.push("/")
                     break
                 case ERROR_GENERIC:
                     dispatch({ type: SIGNUP_FAIL, data: error.message })
@@ -84,10 +85,7 @@ const signup = (username, password, confirmPassword, email) => dispatch => {
 }
 
 const resetPassword = (username, email) => dispatch => {
-    const request_url = BASE_URL + apiConstants.RESET_PASSWORD
-    console.log('Submitting to...', request_url)
-
-    Axios.post(request_url, { username, email })
+    Request.post(apiConstants.RESET_PASSWORD, { username, email })
         .then(({ status, data: { error, data } }) => {
             if (status !== 200) {
                 dispatch({ type: RESET_PASSWORD_FAIL })
@@ -114,10 +112,8 @@ const resetPassword = (username, email) => dispatch => {
 }
 
 const changePassword = (oldPassword, newPassword, newPasswordConfirm) => dispatch => {
-    const request_url = BASE_URL + apiConstants.CHANGE_PASSWORD
-    console.log('Submitting to...', request_url)
-
-    Axios.post(request_url, { oldPassword, newPassword, newPasswordConfirm })
+    console.log(newPasswordConfirm)
+    Request.post(apiConstants.CHANGE_PASSWORD, { oldPassword, newPassword, newPasswordConfirm })
         .then(({ status, data: { data, error } }) => {
             if (status !== 200) {
                 dispatch({ type: CHANGE_PASSWORD_SUCCESS, data })
@@ -142,9 +138,14 @@ const changePassword = (oldPassword, newPassword, newPasswordConfirm) => dispatc
         })
 }
 
+const test = () => {
+    Request.get('/test').then(response => console.log('DEBUG', response.data))
+}
+
 export {
     login,
     signup,
     resetPassword,
-    changePassword
+    changePassword,
+    test
 }

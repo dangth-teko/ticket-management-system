@@ -29,7 +29,7 @@ class ChangePassword extends React.Component {
             console.log('submit failed')
         else {
             console.log('submit success')
-            this.props.dispatch(changePassword(this.state.oldPassword, this.state.newPassword, this.props.newPasswordConfirm))
+            this.props.dispatch(changePassword(this.state.oldPassword, this.state.newPassword, this.state.newPasswordConfirm))
         }
     }
 
