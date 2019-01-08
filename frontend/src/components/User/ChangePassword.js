@@ -49,7 +49,7 @@ class ChangePassword extends React.Component {
         return (
             <Card className="box-shadow-bottom">
                 <Row type="flex" justify="center"><Icon type="lock" style={{ fontSize: '50px' }} /></Row>
-                <Row type="flex" justify="center"><h6>Quên mật khẩu</h6></Row>
+                <Row type="flex" justify="center"><h6>Đổi mật khẩu</h6></Row>
                 <Form className="form" onSubmit={this.handleSubmit}>
                     <Input
                         type="password" className="my-2" prefix={<Icon type="lock" />}

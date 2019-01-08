@@ -4,7 +4,7 @@ import { Center as CenterColumn } from 'components/Utils/Column'
 import history from 'utils/history'
 import ChangePassword from 'components/User/ChangePassword'
 import { ProfileTable } from 'components/User/Profile'
-
+import { Card } from 'antd'
 
 const DefaultComponent = () => (
     <Fragment>
@@ -14,21 +14,23 @@ const DefaultComponent = () => (
 )
 
 const Dashboard = props => (
-    <Router history={history}>
-        <Switch>
-            <Route
-                path="/change-password"
-                component={() =>
-                    <CenterColumn>
-                        <ChangePassword />
-                    </CenterColumn>
-                }
-            />
-            <Route path="/dashboard" component={DefaultComponent} />
-            <Route path="/profile" component={ProfileTable} />
-            <Redirect to="/dashboard" />
-        </Switch>
-    </Router>
+    <Card bordered={false}>
+        <Router history={history}>
+            <Switch>
+                <Route
+                    path="/change-password"
+                    component={() =>
+                        <CenterColumn>
+                            <ChangePassword />
+                        </CenterColumn>
+                    }
+                />
+                <Route path="/dashboard" component={DefaultComponent} />
+                <Route path="/profile" component={ProfileTable} />
+                <Redirect to="/dashboard" />
+            </Switch>
+        </Router>
+    </Card>
 )
 
 export default Dashboard

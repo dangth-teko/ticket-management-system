@@ -114,7 +114,7 @@ const resetPassword = (username, email) => dispatch => {
 }
 
 const changePassword = (oldPassword, newPassword, newPasswordConfirm) => dispatch => {
-    const request_url = BASE_URL + apiConstants.RESET_PASSWORD
+    const request_url = BASE_URL + apiConstants.CHANGE_PASSWORD
     console.log('Submitting to...', request_url)
 
     Axios.post(request_url, { oldPassword, newPassword, newPasswordConfirm })

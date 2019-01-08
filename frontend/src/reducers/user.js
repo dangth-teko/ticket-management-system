@@ -46,7 +46,7 @@ const UserReducer = (state = initialState, action) => {
         case LOGIN_FAIL_3:
             return {
                 ...state,
-                notification :{type: NOTI_TYPE_FAIL, message: action.data},
+                notification: { type: NOTI_TYPE_FAIL, message: action.data },
                 isAuthenticated: false, token: null, error: LOGIN_FAIL_3
             }
 
