@@ -8,7 +8,9 @@ _logger = logging.getLogger(__name__)
 
 
 class Post(db.Model):
-
+    """
+            Bảng default để cho đẹp.
+            """
     __tablename__ = 'posts'
 
     id = db.Column(db.Integer, primary_key=True)

@@ -15,7 +15,7 @@ def app(request):
     ctx = app.app_context()
     ctx.push()
 
-    models.db.create_all()
+    # models.db.create_all()
 
     def teardown():
         models.db.session.remove()
@@ -23,4 +23,5 @@ def app(request):
         ctx.pop()
 
     request.addfinalizer(teardown)
+    # models.db.create_all()
     return app

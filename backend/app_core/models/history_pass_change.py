@@ -6,6 +6,7 @@ from sqlalchemy.dialects.postgresql import ARRAY
 
 
 class HistoryPassChange(BaseModel):
+    """Lưu 5 lần đổi password gần nhất"""
     __tablename__ = 'history_pass_change'
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     history_pass_change = db.Column(MutableList.as_mutable(ARRAY(db.String)), default=[])
