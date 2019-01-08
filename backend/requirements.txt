@@ -10,4 +10,3 @@ Flask-Mail==0.9.1
 Faker==1.0.1
 flask-cors==3.0.7
 flask-bcrypt==0.7.1
-
