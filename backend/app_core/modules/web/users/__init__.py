@@ -30,10 +30,6 @@ def register():
             "data": {}
         }
         data = request.get_json()
-        if 'access_token' in request.cookies:
-            data_token = validate_token(request.cookies['access_token'])
-            format_response['data']['access_token'] = data_token
-            return jsonify(format_response)
 
         matches_username = re.match(REGEX_USERNAME, data['username'], re.MULTILINE | re.VERBOSE)
         matches_password = re.match(REGEX_PASSWORD, data['password'], re.MULTILINE | re.VERBOSE)
@@ -99,15 +95,6 @@ def login():
         "error": {"code": 0, "message": ""},
         "data": {}}
     if request.method == 'POST':
-        if 'access_token' in request.cookies:
-            user = UserToken.get_user_by_token(request.cookies['access_token'])
-            if user:
-                format_response['data'] = {'access_token': user,
-                                           'profile': {'email': user.email, 'username': user.username}}
-            else:
-                format_response['error']['code'] = 1
-                format_response['error']['message'] = 'Sai access token hoặc hết hạn!'
-            return jsonify(format_response)
 
         data = request.get_json()
         if data['username'] is None or data['password'] is None:
@@ -118,14 +105,17 @@ def login():
         matches_username = re.match(REGEX_USERNAME, data['username'], re.MULTILINE | re.VERBOSE)
         matches_password = re.match(REGEX_PASSWORD, data['password'], re.MULTILINE | re.VERBOSE)
         if matches_password is not None and matches_username is not None:
-            user = User.get_user_by_username_password(data['username'], data['password'])
-            if user:
+            try:
+                user = User.get_user_by_username_password(data['username'], data['password'])
+                if user is None:
+                    raise Exception
                 token = generate_token(user)
                 UserToken.insert_token(token, user.id)
                 format_response['data'] = {'token': token,
                                            'profile': {'username': user.username,
                                                        'email': user.email}}
-            else:
+            except Exception as error:
+                _logger.error("User không tồn tại", error)
                 format_response['error'] = HistoryWrongPass.insert_check_time(data['username'])
         else:
             format_response['error']['code'] = 1
@@ -133,7 +123,7 @@ def login():
         return jsonify(format_response)
 
 
-@user.route('/api/change-password', methods=['POST'])
+@user.route('/api/change-password', methods=['GET', 'POST'])
 def change_password():
     """
     Nhận request từ Client về việc thay đổi mật khẩu
@@ -148,43 +138,47 @@ def change_password():
         "data": {}
     }
     if request.method == 'POST':
-        if not 'access_token' in request.cookies:
+        if request.headers.get('Authorization') is None:
             format_response['error']['code'] = 2
             format_response['error']['message'] = 'Không có Token!'
             return jsonify(format_response), 401
 
         data = request.get_json()
+        _logger.debug(data)
+
         if data['oldPassword'] is None or data['newPassword'] is None or data['newPasswordConfirm'] is None:
             format_response['error']['code'] = 1
             format_response['error']['message'] = 'Request sai định dạng'
             return jsonify(format_response), 400
+        try:
+            current_user_id = UserToken.get_user_id_by_token(request.headers.get('Authorization'))
+            if current_user_id is None:
+                raise Exception
+            if not HistoryPassChange.check_current_password(current_user_id, data['oldPassword']):
+                format_response['error']['code'] = 1
+                format_response['error']['message'] = 'Sai password'
+                return jsonify(format_response), 403
+            elif data['newPassword'] != data['newPasswordConfirm']:
+                format_response['error']['code'] = 1
+                format_response['error']['message'] = 'Password không giống nhau'
+                return jsonify(format_response), 400
+            elif not HistoryPassChange.check_history_password(current_user_id, data['newPassword']):
+                format_response['error']['code'] = 1
+                format_response['error']['message'] = 'Mật khẩu không được giống với 5 mật khẩu gần nhất'
+                return jsonify(format_response), 403
 
-        current_user = UserToken.get_user_by_token(request.cookies['access_token'])
-        current_user_id = UserToken.get_user_id_by_token(request.cookies['access_token'])
-        if current_user_id is None or current_user is None:
+            if re.match(REGEX_PASSWORD, data['newPassword'], re.MULTILINE | re.VERBOSE) is None:
+                format_response['error']['code'] = 1
+                format_response['error']['message'] = 'Password không đúng định dạng'
+                return jsonify(format_response)
+
+            User.change_password(current_user_id, data['newPassword'])
+            HistoryPassChange.add_password(current_user_id, data['newPassword'])
+        except Exception as error:
+            _logger.error("Không tìm thấy user", error)
             format_response['error']['code'] = 1
             format_response['error']['message'] = 'Sai Token hoặc Token hết hạn!'
             return jsonify(format_response), 401
 
-        if not HistoryPassChange.check_current_password(current_user, data['oldPassword']):
-            format_response['error']['code'] = 1
-            format_response['error']['message'] = 'Sai password'
-            return jsonify(format_response), 403
-        elif data['newPassword'] != data['newPasswordConfirm']:
-            format_response['error']['code'] = 1
-            format_response['error']['message'] = 'Password không giống nhau'
-            return jsonify(format_response), 400
-        elif not HistoryPassChange.check_history_password(current_user_id, data['newPassword']):
-            format_response['error']['code'] = 1
-            format_response['error']['message'] = 'Mật khẩu không được giống với 5 mật khẩu gần nhất'
-            return jsonify(format_response), 403
-
-        if re.match(REGEX_PASSWORD, data['newPassword'], re.MULTILINE | re.VERBOSE) is None:
-            format_response['error']['code'] = 1
-            format_response['error']['message'] = 'Password không đúng định dạng'
-            return jsonify(format_response)
-
-        User.change_password(current_user, data['newPassword'])
-        HistoryPassChange.add_password(current_user_id, data['newPassword'])
-
         return jsonify(format_response), 200
+
