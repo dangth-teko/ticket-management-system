@@ -5,7 +5,6 @@ from flask import Blueprint, render_template, request
 
 from app_core.models import db, Post
 from app_core.modules.web.users import user
-from app_core.modules.web.users.user_helper import mail
 
 _logger = logging.getLogger(__name__)
 
