@@ -46,18 +46,14 @@ class UserToken(BaseModel):
                 db.session.flush()
         return None
 
-    # @classmethod
-    # def get_user_id_by_token(cls, token):
-    #     """
-    #             get user bằng token.
-    #             :param token:
-    #             :return user:
-    #             """
-    #     token = UserToken.query.filter_by(token=token).first()
-    #     if token:
-    #         if token.expired_time > datetime.datetime.now():
-    #             return token.user_id
-    #         else:
-    #             db.session.delete(token)
-    #             db.session.flush()
-    #     return None
+    @staticmethod
+    def delete_token(token=None):
+        token = UserToken.query.filter_by(token=token).first()
+        if token:
+            db.session.delete(token)
+            db.session.flush()
+
+    @staticmethod
+    def delete_all_token(user_id):
+        UserToken.query.filter_by(user_id=user_id).delete()
+        db.session.flush()

@@ -95,3 +95,4 @@ class User(BaseModel):
         user = User.query.filter_by(id=user_id).first()
         user.password = cls.hash_password(newPassword)
         db.session.commit()
+
