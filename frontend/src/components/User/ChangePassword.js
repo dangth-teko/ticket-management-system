@@ -8,7 +8,9 @@ import {
     Row,
     Card
 } from 'antd'
-
+// Import components
+import Spin from 'components/Utils/Spin'
+// Import functions
 import { changePassword } from 'actions/user'
 import { validatePassword } from 'utils/validateInput'
 import { showNotification } from 'utils/notificate'
@@ -25,10 +27,7 @@ class ChangePassword extends React.Component {
         e.preventDefault()
         const errorPassword = validatePassword(this.state.newPassword, this.state.newPasswordConfirm)
         this.setState({ errorPassword })
-        if (errorPassword)
-            console.log('submit failed')
-        else {
-            console.log('submit success')
+        if (!errorPassword) {
             this.props.dispatch(changePassword(this.state.oldPassword, this.state.newPassword, this.state.newPasswordConfirm))
         }
     }
@@ -41,7 +40,12 @@ class ChangePassword extends React.Component {
         })
     }
 
-    componentDidUpdate() {
+    componentDidUpdate(prevProps, prevState) {
+        console.log('DEBUG in ChangePassword Component: ---------------------------')
+        console.log('Prev props', prevProps)
+        console.log('Current props', this.props)
+        console.log('Prev State', prevState)
+        console.log('Current State', this.state)
         showNotification(this.props)
     }
 
@@ -70,7 +74,7 @@ class ChangePassword extends React.Component {
                         placeholder="Confirm New Password" />
 
                     {this.state.errorPassword && <font color="red">{this.state.errorPassword}</font>}
-
+                    {this.props.pending && <Spin>Sending...</Spin>}
                     <Button type="primary" htmlType="submit" className="my-2 w-100">Change password</Button>
                 </Form>
             </Card>
@@ -78,8 +82,9 @@ class ChangePassword extends React.Component {
     }
 }
 
-const mapStateToProps = state => ({
-    notification: state.user.notification
+const mapPropsToState = state => ({
+    notification: state.user.notification,
+    pending: state.user.pending
 })
 
-export default connect(mapStateToProps, null)(ChangePassword)
+export default connect(mapPropsToState, null)(ChangePassword)

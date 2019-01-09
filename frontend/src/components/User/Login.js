@@ -10,10 +10,14 @@ import {
     Card
 } from 'antd'
 import Recaptcha from 'react-google-recaptcha'
+// Import constants
+import { LOGIN_FAIL_3 } from 'constants/actions'
+// Import components
+import Spin from 'components/Utils/Spin'
+// Import functions
 import { login } from 'actions/user'
 import { validatePassword, validateUsername } from 'utils/validateInput'
 import { showNotification } from 'utils/notificate'
-import { LOGIN_FAIL_3 } from 'constants/actions'
 
 class Login extends React.Component {
     state = {
@@ -74,6 +78,7 @@ class Login extends React.Component {
                         />
                     }
 
+                    {this.props.pending && <Spin>Sending...</Spin>}
                     <Button type="primary" htmlType="submit" className="w-100 my-2">Đăng nhập</Button>
 
                     <Link to="/reset-password">Quên mật khẩu</Link>
@@ -89,7 +94,7 @@ class Login extends React.Component {
 
 const mapStateToProps = state => ({
     notification: state.user.notification,
-    error: state.user.error
+    pending: state.user.pending
 })
 
 export default connect(mapStateToProps, null)(Login)

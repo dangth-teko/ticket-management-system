@@ -1,5 +1,5 @@
 // export const BASE_URL = 'http://localhost:11111/api'
-export const BASE_URL = 'https://eddf1d1b.ngrok.io/api'
+export const BASE_URL = 'https://4387b0cf.ngrok.io/api'
 
 export const apiConstants = {
     POST_LOGIN: '/signin',

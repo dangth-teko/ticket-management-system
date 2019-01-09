@@ -10,6 +10,7 @@ import {
     RESET_PASSWORD_FAIL,
     CHANGE_PASSWORD_SUCCESS,
     CHANGE_PASSWORD_FAIL,
+    CHANGE_PASSWORD_SUBMIT,
     NOTI_TYPE_SUCCESS,
     NOTI_TYPE_FAIL,
     CLEAR_NOTI
@@ -28,28 +29,32 @@ const UserReducer = (state = initialState, action) => {
         case LOGIN_SUBMIT:
             return {
                 ...state,
-                error: null
+                error: null,
+                pending: true
             }
 
         case LOGIN_SUCCESS:
             return {
                 ...state,
                 notification: { type: NOTI_TYPE_SUCCESS },
-                isAuthenticated: true, token: action.data, error: null
+                isAuthenticated: true, token: action.data, error: null,
+                pending: false
             }
 
         case LOGIN_FAIL:
             return {
                 ...state,
                 notification: { type: NOTI_TYPE_FAIL, message: action.data },
-                isAuthenticated: false, token: null, error: null
+                isAuthenticated: false, token: null, error: null,
+                pending: false
             }
 
         case LOGIN_FAIL_3:
             return {
                 ...state,
                 notification: { type: NOTI_TYPE_FAIL, message: action.data },
-                isAuthenticated: false, token: null, error: LOGIN_FAIL_3
+                isAuthenticated: false, token: null, error: LOGIN_FAIL_3,
+                pending: false
             }
 
         case SIGNUP_SUBMIT:
@@ -72,16 +77,24 @@ const UserReducer = (state = initialState, action) => {
                 pending: false
             }
 
+        case CHANGE_PASSWORD_SUBMIT:
+            return {
+                ...state,
+                pending: true
+            }
+
         case CHANGE_PASSWORD_SUCCESS:
             return {
                 ...state,
-                notification: { type: NOTI_TYPE_SUCCESS, message: 'Đổi mật khẩu thành công!' }
+                notification: { type: NOTI_TYPE_SUCCESS, message: 'Đổi mật khẩu thành công!' },
+                pending: false
             }
 
         case CHANGE_PASSWORD_FAIL:
             return {
                 ...state,
-                notification: { type: NOTI_TYPE_FAIL, message: action.data }
+                notification: { type: NOTI_TYPE_FAIL, message: action.data },
+                pending: false
             }
 
         case RESET_PASSWORD_SUCCESS:
