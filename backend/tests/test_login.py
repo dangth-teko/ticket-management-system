@@ -1,8 +1,6 @@
 # coding=utf-8
 
 import logging
-import pytest
-import http.client
 
 from tests.faker import fake
 
@@ -12,13 +10,6 @@ _logger = logging.getLogger(__name__)
 def test_login():
     password = "Test1" + fake.str()
     user = fake.user(password=password)
-    data = {'username': user.username, 'password': password}
-    assert 1 + 1 == 2
+    data = user.get_user_by_username_password(username=user.username, password=password)
+    assert not data is None
 
-
-@pytest.mark.skip
-def _request(method, host, path, headers={}, data=[]):
-    conn = http.client.HTTPSConnection(host, timeout=100)
-    conn.request(method, path, data, headers)
-    response = conn.getresponse()
-    return response.read()
