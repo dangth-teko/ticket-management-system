@@ -6,6 +6,8 @@ from flask import Blueprint, render_template, request
 from app_core.models import db, Post
 from app_core.modules.web.users import user
 
+from app_core.modules.web.users.user_helper import mail
+
 _logger = logging.getLogger(__name__)
 
 web = Blueprint('sample', __name__)
@@ -22,12 +24,12 @@ def init_app(app, **kwargs):
     app.register_blueprint(user)
 
 
-@web.route('/', methods=['GET', 'POST'])
-def index():
-    if request.method == 'POST':
-        text = request.form['text']
-        post = Post(text)
-        db.session.add(post)
-        db.session.commit()
-    posts = Post.query.order_by(Post.date_posted.desc()).all()
-    return render_template('index.html', posts=posts)
+# @web.route('/', methods=['GET', 'POST'])
+# def index():
+#     if request.method == 'POST':
+#         text = request.form['text']
+#         post = Post(text)
+#         db.session.add(post)
+#         db.session.commit()
+#     posts = Post.query.order_by(Post.date_posted.desc()).all()
+#     return render_template('index.html', posts=posts)
