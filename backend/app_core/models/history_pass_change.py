@@ -34,7 +34,7 @@ class HistoryPassChange(BaseModel):
         :return: Kết quả so sánh
         :rtype: Boolean
         """
-        current_password = cls.query.filter_by(user_id=user_id).first()
+        current_password = HistoryPassChange.query.filter_by(user_id=user_id).first()
         if current_password is None:
             return False
         else:
@@ -51,23 +51,9 @@ class HistoryPassChange(BaseModel):
         :return: Kết quả so sánh
         :rtype: Boolean
         """
-        passwords = HistoryPassChange.query.filter_by(user_id=user_id).first().history_pass_change
-        for password in passwords:
+        passwords = HistoryPassChange.query.filter_by(user_id=user_id).first()
+        for password in passwords.history_pass_change:
             if bcrypt.check_password_hash(password, new_password):
                 return False
         return True
 
-    @classmethod
-    def add_password(cls, user_id, new_password):
-        """
-        Thêm mật khẩu mới vào lịch sử thay đổi
-        :param user_id: Id của user
-        :type user_id: Integer
-        :param new_password: Mật khẩu mới
-        :type new_password: String
-        """
-        passwords = HistoryPassChange.query.filter_by(user_id=user_id).first()
-        if len(passwords.history_pass_change) >= 5:
-            passwords.history_pass_change.pop(0)
-        passwords.history_pass_change.append(User.hash_password(new_password))
-        db.session.commit()

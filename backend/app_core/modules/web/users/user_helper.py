@@ -12,18 +12,18 @@ from flask_mail import Mail
 mail = Mail()
 
 
-def validate_token(token):
-    """Validate token
-        :param token
-        """
-    token = UserToken.query.filter_by(token=token).first()
-    if token:
-        if token.expired_time > datetime.datetime.now():
-            return token.user
-        else:
-            db.session.delete(token)
-            db.session.flush()
-    return None
+# def validate_token(token):
+#     """Validate token
+#         :param token
+#         """
+#     token = UserToken.query.filter_by(token=token).first()
+#     if token:
+#         if token.expired_time > datetime.datetime.now():
+#             return token.user
+#         else:
+#             db.session.delete(token)
+#             db.session.flush()
+#     return None
 
 
 def generate_token(user, expiration=1800):
@@ -53,11 +53,11 @@ def validate_signup_request_token(token):
     if request:
         if request.expired_time > datetime.datetime.now():
             user = User(request.username, request.email, request.password)
-            password = HistoryPassChange(request.id, request.password)
-
             db.session.add(user)
-            db.session.add(password)
             db.session.delete(request)
+            db.session.commit()
+            password = HistoryPassChange(user.id, request.password)
+            db.session.add(password)
             db.session.commit()
             return user
         else:
