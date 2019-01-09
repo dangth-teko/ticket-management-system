@@ -57,3 +57,23 @@ class HistoryPassChange(BaseModel):
                 return False
         return True
 
+    @classmethod
+    def add_password(cls, user_id, new_password):
+        """
+        Thêm mật khẩu mới vào lịch sử thay đổi
+        :param user_id: Id của user
+        :type user_id: Integer
+        :param new_password: Mật khẩu mới
+        :type new_password: String
+        """
+        try:
+            passwords = HistoryPassChange.query.filter_by(user_id=user_id).first()
+            if passwords is None:
+                raise Exception
+            if len(passwords.history_pass_change) >= 5:
+                passwords.history_pass_change.pop(0)
+            passwords.history_pass_change.append(User.hash_password(new_password))
+            db.session.commit()
+        except Exception as error:
+            _logger.error("Không tìm thấy id của User", error)
+            return None

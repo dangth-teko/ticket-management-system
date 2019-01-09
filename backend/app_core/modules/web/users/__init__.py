@@ -198,7 +198,7 @@ def change_password():
                 return jsonify(format_response)
 
             User.change_password(current_user.id, data['newPassword'])
-            # HistoryPassChange.add_password(current_user_id, data['newPassword'])
+            HistoryPassChange.add_password(current_user.id, data['newPassword'])
 
             return jsonify(format_response), 200
         except Exception as e:

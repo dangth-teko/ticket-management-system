@@ -93,9 +93,5 @@ class User(BaseModel):
         :param newPassword:
         """
         user = User.query.filter_by(id=user_id).first()
-        new_password = cls.hash_password(newPassword)
-        user.password = new_password
-        user.history_pass_change.history_pass_change.append(new_password)
-        if len(user.history_pass_change.history_pass_change) > 5:
-            user.history_pass_change.history_pass_change.pop(0)
+        user.password = cls.hash_password(newPassword)
         db.session.commit()
