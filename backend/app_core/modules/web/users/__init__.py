@@ -117,13 +117,11 @@ def login():
                     format_response['error']['message'] = 'Sai access token hoặc hết hạn!'
                 return jsonify(format_response)
 
-
             data = request.get_json()
             if data['username'] is None or data['password'] is None:
                 format_response['error']['code'] = 1
                 format_response['error']['message'] = 'Request sai định dạng'
                 return jsonify(format_response)
-
 
             matches_username = re.match(REGEX_USERNAME, data['username'], re.MULTILINE | re.VERBOSE)
             matches_password = re.match(REGEX_PASSWORD, data['password'], re.MULTILINE | re.VERBOSE)
@@ -146,7 +144,6 @@ def login():
             db.session.rollback()
             return jsonify({"error": {"code": 1, "message": "Internal server error!"},
                             "data": {}}), 500
-
 
 
 @user.route('/api/change-password', methods=['GET', 'POST'])
