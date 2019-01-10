@@ -23,7 +23,6 @@ import Request from 'utils/request'
 
 const login = (username, password) => dispatch => {
     dispatch({ type: LOGIN_SUBMIT })
-    // testing
     if (username === "Nam123456" && password === "Nam123456") {
         dispatch({ type: LOGIN_SUCCESS, data: "aaaaaaaaaa" })
         return
@@ -86,20 +85,25 @@ const changePassword = (oldPassword, newPassword, newPasswordConfirm) => dispatc
         .then(({ status, data: { data, error } }) => {
             switch (Number(error.code)) {
                 default:
-                    console.log(history.location)
-                    history.push(history.location)
                     dispatch({ type: CHANGE_PASSWORD_SUCCESS, data })
             }
         })
         .catch(error => {
-            history.push(history.location)
             dispatch({ type: CHANGE_PASSWORD_FAIL, data: error.message })
         })
+}
+
+const logout = () => {
+    console.log('ahihi')
+    Request.post(apiConstants.LOGOUT).then(response => {
+    }).catch(error => {
+    })
 }
 
 export {
     login,
     signup,
     resetPassword,
-    changePassword
+    changePassword,
+    logout
 }

@@ -24,7 +24,8 @@ class Login extends React.Component {
         username: '',
         password: '',
         errorUsername: null,
-        errorPassword: null
+        errorPassword: null,
+        captcha: true
     }
 
     handleSubmit = e => {
@@ -32,8 +33,9 @@ class Login extends React.Component {
         const errorUsername = validateUsername(this.state.username)
         const errorPassword = validatePassword(this.state.password)
         this.setState({ errorUsername, errorPassword })
-        if (!(errorUsername || errorPassword))
+        if (!(errorUsername || errorPassword) && (this.props.error !== LOGIN_FAIL_3 || this.state.captcha)) {
             this.props.dispatch(login(this.state.username, this.state.password))
+        }
     }
 
     handleFormChange = e => {
@@ -44,7 +46,17 @@ class Login extends React.Component {
         })
     }
 
-    componentDidUpdate() {
+    handleCaptchaChange = value => {
+        this.setState({ captcha: true })
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        if (this.props.error !== prevProps.error) {
+            if (this.props.error === LOGIN_FAIL_3)
+                this.setState({ captcha: false })
+            else
+                this.setState({ captcha: false })
+        }
         showNotification(this.props)
     }
 
@@ -70,11 +82,9 @@ class Login extends React.Component {
                     {this.state.errorPassword && <font color="red">{this.state.errorPassword}</font>}
 
                     {this.props.error === LOGIN_FAIL_3 &&
-                        <Recaptcha
+                        < Recaptcha
                             sitekey="6LccxoYUAAAAALeIedc3Ya59wHVl-YgPcs9mlJmG"
-                            onChange={value => {
-                                console.log('Captcha debug...', value)
-                            }}
+                            onChange={this.handleCaptchaChange}
                         />
                     }
 
@@ -94,7 +104,8 @@ class Login extends React.Component {
 
 const mapStateToProps = state => ({
     notification: state.user.notification,
-    pending: state.user.pending
+    pending: state.user.pending,
+    error: state.user.error
 })
 
 export default connect(mapStateToProps, null)(Login)

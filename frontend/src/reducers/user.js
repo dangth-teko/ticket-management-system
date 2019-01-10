@@ -17,7 +17,7 @@ import {
 } from 'constants/actions'
 
 const initialState = {
-    isAuthenticated: false,
+    isAuthenticated: true,
     token: null,
     notification: null,
     error: null,

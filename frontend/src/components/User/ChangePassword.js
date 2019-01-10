@@ -41,11 +41,11 @@ class ChangePassword extends React.Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
-        console.log('DEBUG in ChangePassword Component: ---------------------------')
-        console.log('Prev props', prevProps)
-        console.log('Current props', this.props)
-        console.log('Prev State', prevState)
-        console.log('Current State', this.state)
+        // console.log('DEBUG in ChangePassword Component: ---------------------------')
+        // console.log('Prev props', prevProps)
+        // console.log('Current props', this.props)
+        // console.log('Prev State', prevState)
+        // console.log('Current State', this.state)
         showNotification(this.props)
     }
 

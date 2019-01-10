@@ -1,7 +1,9 @@
+import { logout as requestlogout } from 'actions/user'
 import cookies from 'utils/cookies'
+import Request from 'utils/request'
 import { TOKEN } from 'constants/utils'
 import { LOGIN_SUCCESS, LOGIN_FAIL } from 'constants/actions'
-import Request from 'utils/request'
+
 
 const verify = ({ dispatch }) => {
     const accessToken = cookies.get(TOKEN)
@@ -9,7 +11,7 @@ const verify = ({ dispatch }) => {
         dispatch({ type: LOGIN_FAIL })
         return
     }
-    Request.get('/auth').then(response => {
+    Request.post('/auth').then(response => {
         dispatch({ type: LOGIN_SUCCESS, data: accessToken })
     }).catch(error => {
         logout()
@@ -18,6 +20,7 @@ const verify = ({ dispatch }) => {
 
 const logout = () => {
     cookies.remove(TOKEN)
+    requestlogout()
     window.location.reload()
 }
 

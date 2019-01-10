@@ -17,16 +17,18 @@ instance.interceptors.request.use(request => {
 })
 
 instance.interceptors.response.use(response => {
-    if (response.data.error.code === ERROR_FORBIDDEN) {
-        logout()
-        return Promise.reject()
-    }
-    if (response.data.error.code === ERROR_GENERIC) {
-        return Promise.reject(new Error(response.data.error.message))
+    if (response.data.error) {
+        if (response.data.error.code === ERROR_FORBIDDEN) {
+            logout()
+            return Promise.reject()
+        }
+        if (response.data.error.code === ERROR_GENERIC) {
+            return Promise.reject(new Error(response.data.error.message))
+        }
     }
     return response
 }, error => {
-    if (error.response.status === 401 || error.response.status === 403) logout()
+    if (error.response && error.response.status === 401) logout()
     return Promise.reject(error)
 })
 

@@ -19,7 +19,7 @@ const Dashboard = props => (
             <Switch>
                 <Route
                     path="/change-password"
-                    component={() =>
+                    render={() =>
                         <CenterColumn>
                             <ChangePassword />
                         </CenterColumn>
