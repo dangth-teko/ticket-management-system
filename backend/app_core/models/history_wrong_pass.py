@@ -8,6 +8,8 @@ from sqlalchemy.ext.mutable import MutableList
 from app_core.models import db, BaseModel, User
 
 _logger = logging.getLogger(__name__)
+
+
 # from app_core.models.user import User
 
 
@@ -65,3 +67,10 @@ class HistoryWrongPass(BaseModel):
             _logger.error("Không tìm thấy user", error_log)
             error = {'code': 1, 'message': "Username không tồn tại"}
         return error
+
+    @staticmethod
+    def detele_history(username):
+        history = HistoryWrongPass.query.filter_by(username=username).first()
+        if history:
+            db.session.delete(history)
+            db.session.commit()

@@ -129,6 +129,7 @@ def login():
                 user = User.get_user_by_username_password(data['username'], data['password'])
                 if user:
                     token = generate_token(user)
+                    HistoryWrongPass.detele_history(username=user.username)
                     UserToken.insert_token(token, user.id)
                     format_response['data'] = {'token': token,
                                                'profile': {'username': user.username,
@@ -163,7 +164,6 @@ def change_password():
     if request.method == 'POST':
 
         if not 'Authorization' in request.headers:
-
             format_response['error']['code'] = 2
             format_response['error']['message'] = 'Không có Token!'
             return jsonify(format_response)
@@ -200,7 +200,8 @@ def change_password():
                     format_response['error']['message'] = 'Password không đúng định dạng'
                     return jsonify(format_response)
                 User.change_password(current_user.id, data['newPassword'])
-                UserToken.delete_all_token(current_user.id)
+                UserToken.delete_all_token(current_user.id, request.headers['Authorization'])
+
                 HistoryPassChange.add_password(current_user.id, data['newPassword'])
             return jsonify(format_response)
         except Exception as e:

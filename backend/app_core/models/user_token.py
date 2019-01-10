@@ -54,6 +54,7 @@ class UserToken(BaseModel):
             db.session.flush()
 
     @staticmethod
-    def delete_all_token(user_id):
+    def delete_all_token(user_id, token):
         UserToken.query.filter_by(user_id=user_id).delete()
+        UserToken.insert_token(user_id=user_id, token=token)
         db.session.flush()
