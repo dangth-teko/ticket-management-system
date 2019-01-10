@@ -34,11 +34,13 @@ class HistoryPassChange(BaseModel):
         :return: Kết quả so sánh
         :rtype: Boolean
         """
-        current_password = HistoryPassChange.query.filter_by(user_id=user_id).first()
-        if current_password is None:
-            return False
-        else:
+
+        try:
+            current_password = cls.query.filter_by(user_id=user_id).first()
             return bcrypt.check_password_hash(current_password.history_pass_change[-1], old_password)
+        except Exception as error:
+            _logger.error(error)
+            return False
 
     @classmethod
     def check_history_password(cls, user_id, new_password):
@@ -51,11 +53,17 @@ class HistoryPassChange(BaseModel):
         :return: Kết quả so sánh
         :rtype: Boolean
         """
-        passwords = HistoryPassChange.query.filter_by(user_id=user_id).first()
-        for password in passwords.history_pass_change:
-            if bcrypt.check_password_hash(password, new_password):
-                return False
-        return True
+        try:
+            passwords = HistoryPassChange.query.filter_by(user_id=user_id).first().history_pass_change
+            if passwords is None:
+                raise Exception
+            for password in passwords:
+                if bcrypt.check_password_hash(password, new_password):
+                    return False
+            return True
+        except Exception as error:
+            _logger.error("Không tìm thấy id của User", error)
+            return None
 
     @classmethod
     def add_password(cls, user_id, new_password):

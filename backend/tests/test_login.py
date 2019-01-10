@@ -1,12 +1,10 @@
 # coding=utf-8
 
 import logging
-import pytest
-import http.client
 from app_core.models import User, UserToken, HistoryWrongPass, db
 from app_core.modules.web.users.user_helper import generate_token
-from tests.faker import fake
 
+from tests.faker import fake
 _logger = logging.getLogger(__name__)
 
 
@@ -24,11 +22,3 @@ def test_login():
     assert data3['code'] in [1, 3]
     db.session.delete(user)
     db.session.commit()
-
-
-@pytest.mark.skip
-def _request(method, host, path, headers={}, data=[]):
-    conn = http.client.HTTPSConnection(host, timeout=100)
-    conn.request(method, path, data, headers)
-    response = conn.getresponse()
-    return response.read()

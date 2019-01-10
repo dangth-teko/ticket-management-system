@@ -1,8 +1,12 @@
 # coding=utf-8
 
 import datetime
-from app_core.models import db, User, BaseModel
+import logging
 
+from app_core.models import db, User, BaseModel
+from sqlalchemy import or_
+
+_logger = logging.getLogger(__name__)
 
 class SignupRequest(BaseModel):
     """Signup Request Model
@@ -27,3 +31,19 @@ class SignupRequest(BaseModel):
         self.is_admin = 0
         self.user_token_confirm = token
         self.expired_time = datetime.datetime.now() + datetime.timedelta(minutes=30)
+
+    @classmethod
+    def get_user_by_username_or_email(cls, username, email):
+        """
+            Get user
+            :param username:
+            :return user:
+        """
+        try:
+            user = SignupRequest.query.filter(or_(SignupRequest.username == username, SignupRequest.email == email)).first()
+            if user is None:
+                raise Exception
+            return user
+        except Exception as error:
+            _logger.error("User không tồn tại", error)
+            return None

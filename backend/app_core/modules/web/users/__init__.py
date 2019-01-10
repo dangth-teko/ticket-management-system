@@ -146,7 +146,7 @@ def login():
                             "data": {}}), 500
 
 
-@user.route('/api/change-password', methods=['POST'])
+@user.route('/api/change-password', methods=['GET', 'POST'])
 def change_password():
     """
     Nhận request từ Client về việc thay đổi mật khẩu
@@ -161,15 +161,19 @@ def change_password():
         "data": {}
     }
     if request.method == 'POST':
+
         if not 'Authorization' in request.headers:
+
             format_response['error']['code'] = 2
             format_response['error']['message'] = 'Không có Token!'
             return jsonify(format_response)
 
         data = request.get_json()
+        _logger.debug(data)
+
         if data['oldPassword'] is None or data['newPassword'] is None or data['newPasswordConfirm'] is None:
             format_response['error']['code'] = 1
-            format_response['error']['message'] = 'Request sai định dạng'
+
             return jsonify(format_response)
         try:
             current_user = UserToken.get_user_by_token(request.headers['Authorization'])
