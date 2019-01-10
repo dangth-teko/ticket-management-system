@@ -55,7 +55,7 @@ class Login extends React.Component {
             if (this.props.error === LOGIN_FAIL_3)
                 this.setState({ captcha: false })
             else
-                this.setState({ captcha: false })
+                this.setState({ captcha: true })
         }
         showNotification(this.props)
     }

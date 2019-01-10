@@ -1,5 +1,5 @@
 // export const BASE_URL = 'http://localhost:11111/api'
-export const BASE_URL = 'http://f7b93274.ngrok.io/api'
+export const BASE_URL = 'http://local-ticket.teko.vn/api'
 
 export const apiConstants = {
     POST_LOGIN: '/signin',
