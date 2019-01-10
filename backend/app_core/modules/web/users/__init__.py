@@ -6,7 +6,6 @@ import re
 
 from flask import Blueprint, request, jsonify, render_template, url_for
 from app_core.models import db, UserToken, User, HistoryWrongPass, SignupRequest, HistoryPassChange
-# from app_core.modules.web.users.user_helper import , generate_token
 
 from config import REGEX_USERNAME, REGEX_PASSWORD
 

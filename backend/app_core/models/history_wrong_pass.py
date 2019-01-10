@@ -10,9 +10,6 @@ from app_core.models import db, BaseModel, User
 _logger = logging.getLogger(__name__)
 
 
-# from app_core.models.user import User
-
-
 class HistoryWrongPass(BaseModel):
     """Lưu 5 lần nhập sai password gần nhất"""
     __tablename__ = 'history_wrong_pass'
