@@ -9,4 +9,4 @@ frontend/node_modules
 __pycache__/
 *.pyc
 !/backend/var/log/.gitkeep
-docker-commpose.override.yml
+docker-compose.override.yml
