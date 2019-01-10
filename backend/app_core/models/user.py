@@ -44,10 +44,13 @@ class User(BaseModel):
             :param username:
             :return user:
         """
-        user = User.query.filter(or_(User.username == username, User.email == email)).first()
-        if user:
+        try:
+            user = User.query.filter(or_(User.username == username, User.email == email)).first()
+            if user is None:
+                raise user
             return user
-        else:
+        except Exception as error:
+            _logger.error("User không tồn tại: ", error)
             return None
 
     @staticmethod
@@ -68,30 +71,38 @@ class User(BaseModel):
                 :param password:
                 :return user:
                 """
-        user = User.query.filter_by(username=username).first()
-        if not user:
-            return None
-
-        if user.is_active == 0:
-            if datetime.datetime.now() > user.updated_at + datetime.timedelta(minutes=15):
-                user.is_active = 1
-                user.updated_at = datetime.datetime.now()
-                db.session.flush()
+        try:
+            user = User.query.filter_by(username=username).first()
+            if user.is_active == 0:
+                if datetime.datetime.now() > user.updated_at + datetime.timedelta(minutes=15):
+                    user.is_active = 1
+                    user.updated_at = datetime.datetime.now()
+                    db.session.flush()
+                    return user
+                else:
+                    return None
+            elif bcrypt.check_password_hash(user.password, password):
                 return user
             else:
                 return None
-        elif bcrypt.check_password_hash(user.password, password):
-            return user
-        else:
+        except Exception as error:
+            _logger.error("User không tồn tại", error)
             return None
 
     @classmethod
-    def change_password(cls, user, newPassword):
+    def change_password(cls, user_id, new_password):
         """
         Thay đổi password
         :param user:
         :param newPassword:
         """
-        user.password = cls.hash_password(newPassword)
-        db.session.commit()
 
+        try:
+            user = User.query.filter_by(id=user_id).first()
+            if user is None:
+                raise Exception
+            user.password = cls.hash_password(new_password)
+            db.session.commit()
+        except Exception as error:
+            _logger.error("User không tồn tại", error)
+            return None

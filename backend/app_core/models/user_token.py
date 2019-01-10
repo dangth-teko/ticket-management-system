@@ -3,6 +3,7 @@ import datetime
 
 from app_core.models import db, User, BaseModel
 
+
 class UserToken(BaseModel):
     __tablename__ = 'user_token'
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
@@ -38,26 +39,22 @@ class UserToken(BaseModel):
         token = UserToken.query.filter_by(token=token).first()
         if token:
             if token.expired_time > datetime.datetime.now():
-                user = User.query.filter_by(id=token.user_id)
+                user = User.query.filter_by(id=token.user_id).first()
                 return user
             else:
                 db.session.delete(token)
                 db.session.flush()
         return None
 
-    @classmethod
-    def get_user_id_by_token(cls, token):
-        """
-                get user bằng token.
-                :param token:
-                :return user:
-                """
+    @staticmethod
+    def delete_token(token=None):
         token = UserToken.query.filter_by(token=token).first()
         if token:
-            if token.expired_time > datetime.datetime.now():
-                return token.user_id
-            else:
-                db.session.delete(token)
-                db.session.flush()
-        return None
+            db.session.delete(token)
+            db.session.flush()
 
+    @staticmethod
+    def delete_all_token(user_id, token):
+        UserToken.query.filter_by(user_id=user_id).delete()
+        UserToken.insert_token(user_id=user_id, token=token)
+        db.session.flush()

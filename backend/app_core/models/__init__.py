@@ -25,8 +25,6 @@ def init_app(app, **kwargs):
 
     _logger.info('Start app with database: %s' %
                  app.config['SQLALCHEMY_DATABASE_URI'])
-    # db.drop_all()
-    # db.create_all()
 
 
 from .base_model import BaseModel

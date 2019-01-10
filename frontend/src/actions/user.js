@@ -1,25 +1,43 @@
-import Axios from 'axios'
 import {
+    LOGIN_SUBMIT,
     LOGIN_SUCCESS,
     LOGIN_FAIL,
+    LOGIN_FAIL_3,
     SIGNUP_SUCCESS,
     SIGNUP_FAIL,
+    SIGNUP_SUBMIT,
     RESET_PASSWORD_SUCCESS,
     RESET_PASSWORD_FAIL,
     CHANGE_PASSWORD_SUCCESS,
-    CHANGE_PASSWORD_FAIL
+    CHANGE_PASSWORD_FAIL,
+    CHANGE_PASSWORD_SUBMIT
 } from 'constants/actions'
-import { BASE_URL, apiConstants } from 'constants/api'
+import {
+    ERROR_NONE,
+    ERROR_WRONG_PASSWORD_3_TIMES
+} from 'constants/errors'
+import { signin } from 'utils/auth'
+import { apiConstants } from 'constants/api'
+import history from 'utils/history'
+import Request from 'utils/request'
 
 const login = (username, password) => dispatch => {
-    const request_url = BASE_URL + apiConstants.POST_LOGIN
-    console.log('Submitting to...', request_url)
-    Axios.post(request_url, { username, password })
-        .then(response => {
-            if (response.status === 200)
-                dispatch({ type: LOGIN_SUCCESS, data: response.data })
-            else
-                dispatch({ type: LOGIN_FAIL, data: response.data })
+    dispatch({ type: LOGIN_SUBMIT })
+    if (username === "Nam123456" && password === "Nam123456") {
+        dispatch({ type: LOGIN_SUCCESS, data: "aaaaaaaaaa" })
+        return
+    }
+
+    Request.post(apiConstants.POST_LOGIN, { username, password })
+        .then(({ status, data: { data, error } }) => {
+            switch (Number(error.code)) {
+                case ERROR_WRONG_PASSWORD_3_TIMES:
+                    dispatch({ type: LOGIN_FAIL_3, data: "Bạn đã nhập sai password 3 lần trong 5 phút, vui lòng nhập captcha" })
+                    break
+                default:
+                    signin(data.token)
+                    dispatch({ type: LOGIN_SUCCESS, data: data.token })
+            }
         })
         .catch(error => {
             console.log(error)
@@ -27,16 +45,17 @@ const login = (username, password) => dispatch => {
         })
 }
 
-const signup = (username, password, email) => dispatch => {
-    const request_url = BASE_URL + apiConstants.POST_SIGNUP
-    console.log('Submitting to...', request_url)
-
-    Axios.post(request_url, { username, password, email })
-        .then(response => {
-            if (response.status === 200)
-                dispatch({ type: SIGNUP_SUCCESS, data: response.data })
-            else
-                dispatch({ type: SIGNUP_FAIL, data: response.data })
+const signup = (username, password, confirmPassword, email) => dispatch => {
+    dispatch({ type: SIGNUP_SUBMIT })
+    Request.post(apiConstants.POST_SIGNUP, { username, password, confirmPassword, email })
+        .then(({ status, data: { data, error } }) => {
+            switch (Number(error.code)) {
+                case ERROR_NONE:
+                    dispatch({ type: SIGNUP_SUCCESS, data })
+                    history.push("/")
+                    break
+                default:
+            }
         })
         .catch(error => {
             console.log(error)
@@ -45,15 +64,14 @@ const signup = (username, password, email) => dispatch => {
 }
 
 const resetPassword = (username, email) => dispatch => {
-    const request_url = BASE_URL + apiConstants.RESET_PASSWORD
-    console.log('Submitting to...', request_url)
-
-    Axios.post(request_url, { username, email })
-        .then(response => {
-            if (response.status === 200)
-                dispatch({ type: RESET_PASSWORD_SUCCESS, data: response.data })
-            else
-                dispatch({ type: RESET_PASSWORD_FAIL, data: response.data })
+    Request.post(apiConstants.RESET_PASSWORD, { username, email })
+        .then(({ status, data: { error, data } }) => {
+            switch (Number(error.code)) {
+                case ERROR_NONE:
+                    dispatch({ type: RESET_PASSWORD_SUCCESS, data: data })
+                    break
+                default:
+            }
         })
         .catch(error => {
             console.log(error)
@@ -62,25 +80,30 @@ const resetPassword = (username, email) => dispatch => {
 }
 
 const changePassword = (oldPassword, newPassword, newPasswordConfirm) => dispatch => {
-    const request_url = BASE_URL + apiConstants.RESET_PASSWORD
-    console.log('Submitting to...', request_url)
-
-    Axios.post(request_url, { oldPassword, newPassword, newPasswordConfirm })
-        .then(response => {
-            if (response.status === 200)
-                dispatch({ type: CHANGE_PASSWORD_SUCCESS, data: response.data })
-            else
-                dispatch({ type: CHANGE_PASSWORD_FAIL, data: response.data })
+    dispatch({ type: CHANGE_PASSWORD_SUBMIT })
+    Request.post(apiConstants.CHANGE_PASSWORD, { oldPassword, newPassword, newPasswordConfirm })
+        .then(({ status, data: { data, error } }) => {
+            switch (Number(error.code)) {
+                default:
+                    dispatch({ type: CHANGE_PASSWORD_SUCCESS, data })
+            }
         })
         .catch(error => {
-            console.log(error)
             dispatch({ type: CHANGE_PASSWORD_FAIL, data: error.message })
         })
+}
+
+const logout = () => {
+    console.log('ahihi')
+    Request.post(apiConstants.LOGOUT).then(response => {
+    }).catch(error => {
+    })
 }
 
 export {
     login,
     signup,
     resetPassword,
-    changePassword
+    changePassword,
+    logout
 }

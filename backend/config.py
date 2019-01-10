@@ -27,9 +27,6 @@ SQLALCHEMY_DATABASE_URI = 'postgresql://{0}:{1}@{2}:{3}/{4}'.format(
     POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_HOST, POSTGRES_PORT, POSTGRES_DB
 )
 
-
-# "postgres", "teko@123?", "172.18.0.2", "5432", "ticket"
-
 REGEX_USERNAME = r"""^(?=(?:.*[A-Za-z]){1,})(?=(?:.*\d){1,})([A-Za-z0-9!@#$%^&*()\-_=+{};:,<.>]{6,})$"""
 REGEX_EMAIL = r"""[A-Z0-9._%+-]+@[A-Z0-9-]+.+.[A-Z]{2,4}"""
 REGEX_PASSWORD = r"""^(?=(?:.*[A-Z]){1,})(?=(?:.*[a-z]){1,})(?=(?:.*\d){1,})([A-Za-z0-9!@#$%^&*()\-_=+{};:,<.>]{8,})$"""
@@ -40,4 +37,3 @@ MAIL_USERNAME = os.getenv('MAIL_USERNAME')
 MAIL_PASSWORD = os.getenv('MAIL_PASSWORD')
 MAIL_USE_TLS= os.getenv('MAIL_USE_TLS')
 MAIL_USE_SSL = os.getenv('MAIL_USE_SSL')
-

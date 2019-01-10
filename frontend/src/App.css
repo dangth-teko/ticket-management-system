@@ -36,11 +36,11 @@
 }
 
 .custom-under-header {
-    margin-top: 60px;
+    margin-top: 50px;
 }
 
 @media screen and (min-width: 992px) {
     .custom-content {
-        margin-left: 210px;
+        margin-left: 200px;
     }
 }

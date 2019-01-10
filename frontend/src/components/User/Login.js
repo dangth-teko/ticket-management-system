@@ -6,10 +6,15 @@ import {
     Input,
     Icon,
     Button,
-    Col,
     Row,
     Card
 } from 'antd'
+import Recaptcha from 'react-google-recaptcha'
+// Import constants
+import { LOGIN_FAIL_3 } from 'constants/actions'
+// Import components
+import Spin from 'components/Utils/Spin'
+// Import functions
 import { login } from 'actions/user'
 import { validatePassword, validateUsername } from 'utils/validateInput'
 import { showNotification } from 'utils/notificate'
@@ -19,7 +24,8 @@ class Login extends React.Component {
         username: '',
         password: '',
         errorUsername: null,
-        errorPassword: null
+        errorPassword: null,
+        captcha: true
     }
 
     handleSubmit = e => {
@@ -27,8 +33,9 @@ class Login extends React.Component {
         const errorUsername = validateUsername(this.state.username)
         const errorPassword = validatePassword(this.state.password)
         this.setState({ errorUsername, errorPassword })
-        if (!(errorUsername || errorPassword))
+        if (!(errorUsername || errorPassword) && (this.props.error !== LOGIN_FAIL_3 || this.state.captcha)) {
             this.props.dispatch(login(this.state.username, this.state.password))
+        }
     }
 
     handleFormChange = e => {
@@ -39,53 +46,66 @@ class Login extends React.Component {
         })
     }
 
-    componentDidUpdate() {
-        if (this.props.token) {
-            localStorage.setItem("teko-token", this.props.token)
-            window.location.reload()
+    handleCaptchaChange = value => {
+        this.setState({ captcha: true })
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        if (this.props.error !== prevProps.error) {
+            if (this.props.error === LOGIN_FAIL_3)
+                this.setState({ captcha: false })
+            else
+                this.setState({ captcha: true })
         }
         showNotification(this.props)
     }
 
     render() {
         return (
-            <Col>
-                <Card className="box-shadow-bottom">
-                    <Row type="flex" justify="center"><Icon type="user" style={{ fontSize: '50px' }} /></Row>
-                    <Row type="flex" justify="center"><h6>Đăng nhập</h6></Row>
+            <Card className="box-shadow-bottom">
+                <Row type="flex" justify="center"><Icon type="user" style={{ fontSize: '50px' }} /></Row>
+                <Row type="flex" justify="center"><h6>Đăng nhập</h6></Row>
 
-                    <Form className="form" onSubmit={this.handleSubmit}>
-                        <Input
-                            className="my-2" prefix={<Icon type="user" />}
-                            name="username"
-                            onChange={this.handleFormChange}
-                            placeholder="username" />
-                        {this.state.errorUsername && <font color="red">{this.state.errorUsername}</font>}
+                <Form className="form" onSubmit={this.handleSubmit}>
+                    <Input
+                        className="my-2" prefix={<Icon type="user" />}
+                        name="username"
+                        onChange={this.handleFormChange}
+                        placeholder="username" />
+                    {this.state.errorUsername && <font color="red">{this.state.errorUsername}</font>}
 
-                        <Input
-                            type="password" className="my-2" prefix={<Icon type="lock" />}
-                            name="password"
-                            onChange={this.handleFormChange}
-                            placeholder="password" />
-                        {this.state.errorPassword && <font color="red">{this.state.errorPassword}</font>}
+                    <Input
+                        type="password" className="my-2" prefix={<Icon type="lock" />}
+                        name="password"
+                        onChange={this.handleFormChange}
+                        placeholder="password" />
+                    {this.state.errorPassword && <font color="red">{this.state.errorPassword}</font>}
 
-                        <Button type="primary" htmlType="submit" className="w-100 my-2">Đăng nhập</Button>
+                    {this.props.error === LOGIN_FAIL_3 &&
+                        < Recaptcha
+                            sitekey="6LccxoYUAAAAALeIedc3Ya59wHVl-YgPcs9mlJmG"
+                            onChange={this.handleCaptchaChange}
+                        />
+                    }
 
-                        <Link to="/reset-password">Quên mật khẩu</Link>
-                        <div className="break-line" />
+                    {this.props.pending && <Spin>Sending...</Spin>}
+                    <Button type="primary" htmlType="submit" className="w-100 my-2">Đăng nhập</Button>
 
-                        <strong>{'Chưa có tài khoản?'}</strong>
-                        <Link to="/signup">Đăng ký</Link>
-                    </Form>
-                </Card>
-            </Col>
+                    <Link to="/reset-password">Quên mật khẩu</Link>
+                    <div className="break-line" />
+
+                    <strong>{'Chưa có tài khoản?'}</strong>
+                    <Link to="/signup">Đăng ký</Link>
+                </Form>
+            </Card>
         )
     }
 }
 
 const mapStateToProps = state => ({
-    token: state.user.token,
     notification: state.user.notification,
+    pending: state.user.pending,
+    error: state.user.error
 })
 
 export default connect(mapStateToProps, null)(Login)

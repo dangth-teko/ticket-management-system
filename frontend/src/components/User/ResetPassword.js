@@ -5,11 +5,13 @@ import {
     Input,
     Icon,
     Button,
-    Col,
     Row,
     Card
 } from 'antd'
 
+// Import components
+import Spin from 'components/Utils/Spin'
+// Import function
 import { resetPassword } from 'actions/user'
 import { validateEmail, validateUsername } from 'utils/validateInput'
 import { showNotification } from 'utils/notificate'
@@ -48,35 +50,35 @@ class ResetPassword extends React.Component {
 
     render() {
         return (
-            <Col>
-                <Card className="box-shadow-bottom">
-                    <Row type="flex" justify="center"><Icon type="lock" style={{ fontSize: '50px' }} /></Row>
-                    <Row type="flex" justify="center"><h6>Quên mật khẩu</h6></Row>
-                    <Form className="form" onSubmit={this.handleSubmit}>
-                        <Input
-                            className="my-2" prefix={<Icon type="user" />}
-                            name="username"
-                            onChange={this.handleFormChange}
-                            placeholder="username" />
-                        {this.state.errorUsername && <font color="red">{this.state.errorUsername}</font>}
+            <Card className="box-shadow-bottom">
+                <Row type="flex" justify="center"><Icon type="lock" style={{ fontSize: '50px' }} /></Row>
+                <Row type="flex" justify="center"><h6>Quên mật khẩu</h6></Row>
+                <Form className="form" onSubmit={this.handleSubmit}>
+                    <Input
+                        className="my-2" prefix={<Icon type="user" />}
+                        name="username"
+                        onChange={this.handleFormChange}
+                        placeholder="username" />
+                    {this.state.errorUsername && <font color="red">{this.state.errorUsername}</font>}
 
-                        <Input
-                            className="my-2" prefix={<Icon type="mail" />}
-                            name="email"
-                            onChange={this.handleFormChange}
-                            placeholder="email" />
-                        {this.state.errorEmail && <font color="red">{this.state.errorEmail}</font>}
+                    <Input
+                        className="my-2" prefix={<Icon type="mail" />}
+                        name="email"
+                        onChange={this.handleFormChange}
+                        placeholder="email" />
+                    {this.state.errorEmail && <font color="red">{this.state.errorEmail}</font>}
 
-                        <Button type="primary" htmlType="submit" className="my-2 w-100">Reset password</Button>
-                    </Form>
-                </Card>
-            </Col>
+                    {this.props.pending && <Spin>Sending...</Spin>}
+                    <Button type="primary" htmlType="submit" className="my-2 w-100">Reset password</Button>
+                </Form>
+            </Card>
         )
     }
 }
 
 const mapStateToProps = state => ({
-    notification: state.user.notification
+    notification: state.user.notification,
+    pending: state.user.pending
 })
 
 export default connect(mapStateToProps, null)(ResetPassword)
