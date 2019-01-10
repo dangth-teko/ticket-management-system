@@ -206,7 +206,7 @@ def change_password():
                             "data": {}}), 500
 
 
-@user.route('/api/auth', methods=['POST', 'GET', 'OPTIONS'])
+@user.route('/api/auth', methods=['POST', 'GET'])
 def index():
     format_response = {
         "error": {"code": 0, "message": ""},

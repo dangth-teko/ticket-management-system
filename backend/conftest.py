@@ -7,7 +7,7 @@ from app_core import models
 _logger = logging.getLogger(__name__)
 
 
-@pytest.fixture(autouse=True)
+# @pytest.fixture(autouse=True)
 def app(request):
     from app import app
 

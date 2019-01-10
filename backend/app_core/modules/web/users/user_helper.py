@@ -57,6 +57,7 @@ def validate_signup_request_token(token):
             db.session.delete(request)
             db.session.commit()
             password = HistoryPassChange(user.id, request.password)
+            password.user = user
             db.session.add(password)
             db.session.commit()
             return user
