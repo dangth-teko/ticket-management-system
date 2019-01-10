@@ -24,8 +24,9 @@ POSTGRES_PASSWORD = os.getenv('POSTGRES_PASSWORD')
 POSTGRES_HOST = os.getenv('POSTGRES_HOST')
 POSTGRES_PORT = os.getenv('POSTGRES_PORT')
 SQLALCHEMY_DATABASE_URI = 'postgresql://{0}:{1}@{2}:{3}/{4}'.format(
-    "postgres", "teko@123?", "172.18.0.2", "5432", "ticket"
+    POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_HOST, POSTGRES_PORT, POSTGRES_DB
 )
+
 
 # "postgres", "teko@123?", "172.18.0.2", "5432", "ticket"
 
