@@ -1,0 +1,15 @@
+FROM node:10.14.1-alpine
+
+# Install yarn
+RUN npm install -g yarn
+
+# Create app directory
+RUN mkdir /frontend
+WORKDIR /frontend
+
+ADD package.json /frontend
+
+RUN yarn
+ADD . /frontend
+RUN yarn build
+
