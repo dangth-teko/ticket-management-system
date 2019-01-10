@@ -6,8 +6,8 @@ services:
     restart: always
     env_file:
       - .env
-    ports:
-      - "5435:5432"
+#    ports:
+#      - "5435:5432"
     networks:
       - ticket-service
     volumes:
@@ -19,8 +19,8 @@ services:
     volumes:
       - ./backend:/backend
       - ./backend/wait-for-postgres.sh:/backend/wait-for-postgres.sh
-    ports:
-      - "5000:5000"
+#    ports:
+#      - "5000:5000"
     env_file: .env
     command: ["./wait-for-postgres.sh", "db", "entrypoint-dev.sh"]
     networks:
@@ -48,8 +48,8 @@ services:
     restart: always
     volumes:
       - ./nginx/conf.d:/etc/nginx/conf.d
-    ports:
-      - "80:80"
+#    ports:
+#      - "80:80"
     networks:
       - ticket-service
     depends_on:
